@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser/firebase-error-parser';
-
+import { LoginPage } from '../login/login';
 @IonicPage()
 @Component({
   selector: 'page-signup',
@@ -14,7 +14,7 @@ export class SignupPage {
 
   user = {} as User;
 
-  constructor(private errorParser: FirebaseErrorParserProvider, public alertCtrl: AlertController, private fire: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private errorParser: FirebaseErrorParserProvider, public toast: ToastController, private fire: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
@@ -24,8 +24,8 @@ export class SignupPage {
   async signup(user: User){
     try {
       this.fire.auth.createUserWithEmailAndPassword(user.email, user.password)
-      .then(data => {
-        console.log(data);
+      .then((res) => {
+        this.sendEmailVerification();
       })
       .catch(error => {
         this.errorParser.pop_toast(error);
@@ -37,13 +37,24 @@ export class SignupPage {
     }
   }
 
-  showAlert(errorMessage) {
-    let alert = this.alertCtrl.create({
-      title: 'Invalid input',
-      subTitle: errorMessage,
-      buttons: ['OK']
-    });
-    alert.present();
+  sendEmailVerification(){
+    this.fire.authState.subscribe(user => {
+      user.sendEmailVerification()
+      .then(() => {
+        this.toast.create({
+          message: "Please check your email to verify your account.",
+          duration: 3000,
+        }).present().then(res => {
+          this.navCtrl.push(LoginPage);
+          this.navCtrl.remove(1);
+        });
+      }).catch(error => {
+        this.toast.create({
+          message: error,
+          duration: 3000,
+        }).present();
+      });
+    })
   }
 
 }

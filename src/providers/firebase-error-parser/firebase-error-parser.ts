@@ -43,6 +43,10 @@ export class FirebaseErrorParserProvider {
         answer = "Please enter a valid email address."
         break;
       }
+      case "auth/email-already-in-use": {
+        answer = "That email is already in use."
+        break;
+      }
       default: {
         answer = "Something went wrong"
         break;
