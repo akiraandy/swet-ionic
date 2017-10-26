@@ -1,0 +1,10 @@
+page-workout {
+    #workout { 
+        background: $background;
+    }
+    h1 {
+        color: color($colors, light);
+        font-size: 50px;
+        margin-top:50px;
+    }
+}

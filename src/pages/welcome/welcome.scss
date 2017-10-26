@@ -1,0 +1,21 @@
+page-welcome {
+#welcome {
+    background: -webkit-linear-gradient(-90deg, #31B7D7, color($colors, energy));
+    h1{
+        color: color($colors, light);
+        font-size: 50px;
+        margin-top:50px;
+    }
+    h2{
+        color: color($colors, light);
+    }
+}
+
+.welcomebutton {
+    color: color($colors, secondary);
+    margin-top: 60px;
+    height: 100px;
+    font-size: 35px;
+}
+
+}

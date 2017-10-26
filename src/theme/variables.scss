@@ -34,11 +34,12 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #488aff,
-  secondary:  #32db64,
-  danger:     #f53d3d,
+  primary:    #d76732,
+  secondary:  #FBA334,
+  energy:     #962130,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #1f1111,
+  faint:      #F6E191
 );
 
 
@@ -69,7 +70,7 @@ $colors: (
 // then be future customized. This import comes last
 // so that the above variables are used and Ionic's
 // default are overridden.
-
+$background: -webkit-linear-gradient(-90deg, #31B7D7, color($colors, energy));
 @import "ionic.theme.default";
 
 
