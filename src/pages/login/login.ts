@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ToastController, App } from 'ionic
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
-import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser/firebase-error-parser';
+import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
 @IonicPage()

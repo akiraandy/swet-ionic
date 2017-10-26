@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the WorkoutPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { WorkoutCreatePage } from '../workout-create/workout-create';
 @IonicPage()
 @Component({
   selector: 'page-workout',
@@ -15,11 +8,12 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class WorkoutPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WorkoutPage');
+  addWorkout() {
+    let modal = this.modalCtrl.create(WorkoutCreatePage);
+    modal.present();
   }
 
 }

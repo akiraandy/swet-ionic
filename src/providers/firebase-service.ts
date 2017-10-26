@@ -1,20 +1,26 @@
-import {AngularFireDatabase } from 'angularfire2/database';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class FirebaseService {
 
-    constructor(public afd: AngularFireDatabase) { }
-
-    getWorkouts() {
-        return this.afd.list('/workouts/');
+    constructor(private db: AngularFirestore) { }
+    addUser(user) {
+        this.db.collection("users").doc(user.id).set({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            DoB: user.dateOfBirth,
+            created_at: this.db.firestore.FieldValue.serverTimestamp(),
+            updated_at: this.db.firestore.FieldValue.serverTimestamp()
+        }).then(res => {
+            console.log("User created with ID: ", res)
+        }).catch(error => {
+            console.error("Error adding user: ", error);
+        });
     }
 
-    addWorkout(name) {
-        this.afd.list('/workouts/').push(name);
-    }
-
-    removeWorkout(id) {
-        this.afd.list('/workouts/').remove(id);
+    addWorkout(workout) {
+        this.db.collection("workouts")
     }
 }

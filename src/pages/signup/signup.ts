@@ -3,8 +3,10 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
-import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser/firebase-error-parser';
+import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { LoginPage } from '../login/login';
+import { FirebaseService } from '../../providers/firebase-service';
+
 @IonicPage()
 @Component({
   selector: 'page-signup',
@@ -14,7 +16,7 @@ export class SignupPage {
 
   user = {} as User;
 
-  constructor(private errorParser: FirebaseErrorParserProvider, public toast: ToastController, private fire: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private firebase: FirebaseService, private errorParser: FirebaseErrorParserProvider, public toast: ToastController, private fire: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
@@ -25,6 +27,8 @@ export class SignupPage {
     try {
       this.fire.auth.createUserWithEmailAndPassword(user.email, user.password)
       .then((res) => {
+        user.id = res.uid
+        this.firebase.addUser(user);
         this.sendEmailVerification();
       })
       .catch(error => {

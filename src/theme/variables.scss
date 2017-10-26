@@ -70,7 +70,7 @@ $colors: (
 // then be future customized. This import comes last
 // so that the above variables are used and Ionic's
 // default are overridden.
-
+$background: -webkit-linear-gradient(-90deg, #31B7D7, color($colors, energy));
 @import "ionic.theme.default";
 
 
