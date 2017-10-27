@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { AngularFirestore } from 'angularfire2/firestore'
+import { NavController, AlertController, NavParams, LoadingController } from 'ionic-angular';
+import firebase from 'firebase';
+import 'firebase/firestore';
+import { FirebaseService } from '../../providers/firebase-service';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'page-home',
@@ -8,23 +11,24 @@ import { AngularFirestore } from 'angularfire2/firestore'
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, private db: AngularFirestore) {
-    
+  private _COLL : string = "users";
+  private _DC : string = "qeDQ8el6XzOuHl4Plgqq8cylhah2"
+  private _CONTENT : any;
+  public userFirstName;
+
+  constructor(public navParams: NavParams, 
+    public navCtrl: NavController, 
+    private _DB: FirebaseService, 
+    public userService: UserService,
+    public loadingCtrl: LoadingController) {}
+
+  ionViewWillEnter(){
+    this.userFirstName = this.navParams.data.currentUser.first
   }
 
-  changeUserDate(){
-    let user = this.db.collection('users').doc('Xc2BFlt27gh7xPK3qb2FpR9Nw2p1');
-
-    var updateTimestamp = user.update({
-      updated_at: this.db.firestore.FieldValue.serverTimeStamp()
-    }).then(res => {
-      console.log("Succes", res);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  getNav(){
+    console.log(this.navParams);
   }
-
 }
 
 

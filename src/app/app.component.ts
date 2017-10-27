@@ -8,15 +8,12 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { TabsPage } from '../pages/tabs/tabs';
 
-
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
 
   rootPage: any = WelcomePage;
-
-  pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
