@@ -12,6 +12,7 @@ export class WorkoutPage {
   }
 
   addWorkout() {
+    console.log("Going to create workout page");
     let modal = this.modalCtrl.create(WorkoutCreatePage);
     modal.present();
   }

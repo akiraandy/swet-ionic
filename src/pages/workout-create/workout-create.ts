@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the WorkoutCreatePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { Workout } from '../../models/workout';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -15,11 +10,28 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class WorkoutCreatePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  private workout_form : FormGroup;
+  workout = Workout;
+
+  constructor(public viewCtrl: ViewController, private form: FormBuilder) {
+    this.workout_form = this.form.group({
+      title: ["", Validators.compose([Validators.maxLength(30), Validators.required])],
+      date: ["", Validators.required]
+    });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WorkoutCreatePage');
   }
+
+  close() {
+    this.viewCtrl.dismiss();
+  }
+
+  submit() {
+
+  }
+
+  
 
 }

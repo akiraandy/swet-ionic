@@ -5,7 +5,7 @@ import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { LoginPage } from '../login/login';
-import { FirebaseService } from '../../providers/firebase-service';
+import { FirebaseService } from '../../services/firebase-service';
 
 @IonicPage()
 @Component({

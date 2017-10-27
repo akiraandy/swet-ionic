@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController, NavParams, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
 import 'firebase/firestore';
-import { FirebaseService } from '../../providers/firebase-service';
+import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 
 @Component({
@@ -30,5 +30,3 @@ export class HomePage {
     console.log(this.navParams);
   }
 }
-
-
