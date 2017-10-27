@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { HomePage } from '../home/home';
@@ -9,6 +8,8 @@ import { TabsPage } from '../tabs/tabs';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 @IonicPage()
 @Component({
@@ -19,7 +20,6 @@ export class LoginPage {
 
   user = {} as User;
   private login_form : FormGroup;
-
 
   constructor( 
     private errorParser: FirebaseErrorParserProvider, 

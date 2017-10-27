@@ -78,10 +78,10 @@ const FIREBASE_CONFIG = {
     SplashScreen,
     AngularFireAuth,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    FirebaseService,
     FirebaseErrorParserProvider,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    FirebaseService,
   ]
 })
 export class AppModule {}

@@ -14,8 +14,10 @@ import { TabsPage } from '../pages/tabs/tabs';
 export class MyApp {
 
   rootPage: any = WelcomePage;
+  
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+    
     this.initializeApp();
   }
 

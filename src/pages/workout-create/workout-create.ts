@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
 import { Workout } from '../../models/workout';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FirebaseService } from '../../services/firebase-service';
+import { UserService } from '../../services/user-service';
 
 @IonicPage()
 @Component({
@@ -13,23 +15,35 @@ export class WorkoutCreatePage {
   private workout_form : FormGroup;
   workout = Workout;
 
-  constructor(public viewCtrl: ViewController, private form: FormBuilder) {
+  constructor(private user: UserService, 
+    public viewCtrl: ViewController, 
+    private form: FormBuilder, 
+    private _DB: FirebaseService,
+    public toast: ToastController) 
+    {
     this.workout_form = this.form.group({
       title: ["", Validators.compose([Validators.maxLength(30), Validators.required])],
       date: ["", Validators.required]
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WorkoutCreatePage');
+  close(workout?) {
+    this.viewCtrl.dismiss(workout);
   }
 
-  close() {
-    this.viewCtrl.dismiss();
-  }
-
-  submit() {
-
+  submit(workout) {
+    this._DB.addWorkout(workout, this.user.id)
+    .then(res => {
+      console.log("We can close the modal!");
+      this.close(res);
+    })
+    .catch(error => {
+      this.toast.create({
+        message: "Couldn't save your workout...",
+        duration: 3000
+      }).present();
+      console.log("We didn't successfully save the workout!");
+    });
   }
 
   
