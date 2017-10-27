@@ -25,6 +25,8 @@ import { FirebaseErrorParserProvider } from '../providers/firebase-error-parser'
 import { FirebaseService } from '../providers/firebase-service';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
+import { UserService } from '../services/user-service';
+
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCI0IpbG1D3dqRXIZW0vCCu-l6MvfR4T5w",
@@ -50,7 +52,9 @@ const FIREBASE_CONFIG = {
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      spinner: 'crescent'
+    }),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -69,6 +73,7 @@ const FIREBASE_CONFIG = {
     WorkoutCreatePage,
   ],
   providers: [
+    UserService,
     StatusBar,
     SplashScreen,
     AngularFireAuth,
@@ -76,7 +81,7 @@ const FIREBASE_CONFIG = {
     FirebaseErrorParserProvider,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    FirebaseService
+    FirebaseService,
   ]
 })
 export class AppModule {}
