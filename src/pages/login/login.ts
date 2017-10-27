@@ -1,14 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, App } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
-import { FirebaseService } from '../../providers/firebase-service';
+import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
-
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 @IonicPage()
 @Component({
@@ -18,16 +19,22 @@ import { UserService } from '../../services/user-service';
 export class LoginPage {
 
   user = {} as User;
+  private login_form : FormGroup;
 
-  constructor(
-    private app: App, 
+  constructor( 
     private errorParser: FirebaseErrorParserProvider, 
     private toast: ToastController, 
     private fire: AngularFireAuth, 
     public navCtrl: NavController, 
     public navParams: NavParams,
     private _DB: FirebaseService,
-    public userService: UserService) {}
+    public userService: UserService,
+    private form: FormBuilder) {
+      this.login_form = this.form.group({
+        email: ["", Validators.compose([Validators.email, Validators.required])],
+        password: ["", Validators.required]
+      });
+    }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');

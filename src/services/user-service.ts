@@ -13,7 +13,6 @@ export class UserService {
 
 
   constructor(events: Events) {
-
   }
 
   setUser(args) {

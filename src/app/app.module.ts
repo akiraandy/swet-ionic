@@ -22,7 +22,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FirebaseErrorParserProvider } from '../providers/firebase-error-parser';
-import { FirebaseService } from '../providers/firebase-service';
+import { FirebaseService } from '../services/firebase-service';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { UserService } from '../services/user-service';
@@ -78,10 +78,10 @@ const FIREBASE_CONFIG = {
     SplashScreen,
     AngularFireAuth,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    FirebaseService,
     FirebaseErrorParserProvider,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    FirebaseService,
   ]
 })
 export class AppModule {}

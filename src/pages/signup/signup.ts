@@ -1,11 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AlertController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
 import { LoginPage } from '../login/login';
-import { FirebaseService } from '../../providers/firebase-service';
+import { FirebaseService } from '../../services/firebase-service';
+
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+
+
 
 @IonicPage()
 @Component({
@@ -14,9 +17,24 @@ import { FirebaseService } from '../../providers/firebase-service';
 })
 export class SignupPage {
 
+  private signup_form : FormGroup;
   user = {} as User;
 
-  constructor(private firebase: FirebaseService, private errorParser: FirebaseErrorParserProvider, public toast: ToastController, private fire: AngularFireAuth, public navCtrl: NavController, public navParams: NavParams) {
+  constructor( 
+    private errorParser: FirebaseErrorParserProvider, 
+    public toast: ToastController,
+    private fire: AngularFireAuth,
+    private _DB: FirebaseService, 
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    private form: FormBuilder) {
+      this.signup_form = this.form.group({
+        firstName: ["", Validators.required],
+        lastName: ["", Validators.required],
+        DoB: ["", Validators.required],
+        email: ["", Validators.compose([Validators.email, Validators.required])],
+        password: ["", Validators.required]
+      });
   }
 
   ionViewDidLoad() {
@@ -28,7 +46,7 @@ export class SignupPage {
       this.fire.auth.createUserWithEmailAndPassword(user.email, user.password)
       .then((res) => {
         user.id = res.uid
-        this.firebase.addUser(user);
+        this._DB.addUser(user);
         this.sendEmailVerification();
       })
       .catch(error => {
