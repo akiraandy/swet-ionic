@@ -3,6 +3,7 @@ import 'rxjs/add/operator/map';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { Observable } from 'rxjs/Observable';
+import moment from 'moment';
 
 @Injectable()
 export class FirebaseService {
@@ -42,8 +43,9 @@ export class FirebaseService {
             .then(querySnapshot => {
                 querySnapshot.forEach(workoutData => {
                     let workout = {};
+                    workout["id"] = workoutData.id;
                     workout["title"] = workoutData.data().title
-                    workout["data"] = workoutData.data().date
+                    workout["date"] = moment(workoutData.data().date).fromNow();
                     observer.next(workout);
                 });
                 observer.complete();

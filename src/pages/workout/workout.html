@@ -6,19 +6,23 @@
       refreshingSpinner="crescent"
       refreshingText="Getting workouts...">
     </ion-refresher-content>
-      </ion-refresher>
-    <ion-fab top right>
-      <button ion-fab mini><ion-icon name="expand"></ion-icon></button>
+  </ion-refresher>
+  
+  <div>
+    <ion-fab top right #fab1>
+      <button ion-fab mini (click)="fabContainerClicked(fab1)" color="secondary"><ion-icon name="expand" color="light"></ion-icon></button>
       <ion-fab-list>
-        <button ion-fab (click)="addWorkout()"><ion-icon name="add" ></ion-icon></button>
-        <button ion-fab><ion-icon name="search"></ion-icon></button>
+        <button ion-fab (click)="addWorkout(); closeFab(fab1)" color="primary"><ion-icon name="add" color="light"></ion-icon></button>
+        <button ion-fab color="primary" (click)="closeFab(fab1)"><ion-icon name="search" color="light"></ion-icon></button>
       </ion-fab-list>
     </ion-fab>
+  </div>
 
-    <ion-list >
-      <ion-item *ngFor="let workout of workouts">{{workout.title}}</ion-item>
+  <div [class.blur]="fabOpened">
+    <ion-list>
+      <ion-item *ngFor="let workout of workouts" (click)="goToWorkoutShowPage(workout)">{{workout.title}} {{workout.date}}</ion-item>
     </ion-list>
-
+  </div>
   
 
 </ion-content>

@@ -7,4 +7,14 @@ page-workout {
         font-size: 50px;
         margin-top:50px;
     }
+
+    .blur {
+        -webkit-filter: blur(10px);
+        -moz-filter: blur(10px);
+        -o-filter: blur(10px);
+        -ms-filter: blur(10px);
+        filter: blur(10px);
+    }
+
+
 }
