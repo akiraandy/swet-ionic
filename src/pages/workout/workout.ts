@@ -1,6 +1,5 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController, FabContainer } from 'ionic-angular';
-import { WorkoutCreatePage } from '../workout-create/workout-create';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 
