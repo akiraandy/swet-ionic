@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ToastController} from 'ionic-angul
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
-import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
@@ -52,7 +51,7 @@ export class LoginPage {
           let userData = this._DB.getUser(user.uid)
           userData.then(data => {
             this.userService.setUser(data);
-            this.navCtrl.setRoot(TabsPage, {
+            this.navCtrl.setRoot("TabsPage", {
               currentUser : data
             });
           })

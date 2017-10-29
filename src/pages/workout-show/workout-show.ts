@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ModalController } from 'ionic-angular';
 import { FirebaseService } from '../../services/firebase-service';
-import { ExerciseCreatePage } from '../exercise-create/exercise-create';
+
 
 @IonicPage()
 @Component({
@@ -57,7 +57,7 @@ export class WorkoutShowPage {
   }
 
   goToExerciseCreatePage(){
-    let modal = this.modalCtrl.create(ExerciseCreatePage, {workout_id: this.navParams.get("id")});
+    let modal = this.modalCtrl.create("ExerciseCreatePage", {workout_id: this.navParams.get("id")});
     this.addBlur();
     modal.onDidDismiss(res => {
       this.removeBlur();

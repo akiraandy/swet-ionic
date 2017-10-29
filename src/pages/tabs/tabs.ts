@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { HomePage } from '../home/home';
-import { WorkoutPage } from '../workout/workout';
-import { StatsPage } from '../stats/stats';
-import { NavParams, Events } from 'ionic-angular';
+import { NavParams, Events, IonicPage } from 'ionic-angular';
 
+@IonicPage()
 @Component({
   templateUrl: 'tabs.html',
+  selector: 'page-tabs',
 })
 export class TabsPage {
 
-  tab1Root = HomePage;
-  tab2Root = WorkoutPage;
-  tab3Root = StatsPage;
+  home = "HomePage";
+  workout = "WorkoutPage";
+  stats = "StatsPage";
   homeParams : any;
 
   constructor(public params: NavParams) {
