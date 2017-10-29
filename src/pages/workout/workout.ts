@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController, LoadingController
 import { WorkoutCreatePage } from '../workout-create/workout-create';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
-import { WorkoutShowPage } from '../../pages/workout-show/workout-show';
+
 
 @IonicPage()
 @Component({
@@ -24,7 +24,7 @@ export class WorkoutPage {
   }
 
   addWorkout() {
-    let modal = this.modalCtrl.create(WorkoutCreatePage, {enableBackdropDismiss: true});
+    let modal = this.modalCtrl.create("WorkoutCreatePage", {enableBackdropDismiss: true});
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
@@ -69,7 +69,7 @@ export class WorkoutPage {
 
   goToWorkoutShowPage(workout){
     if (!this.fabOpened){
-      this.navCtrl.push(WorkoutShowPage, {
+      this.navCtrl.push("WorkoutShowPage", {
         id: workout.id
       });
     }

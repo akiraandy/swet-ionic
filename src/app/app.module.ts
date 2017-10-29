@@ -2,17 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
-import { WelcomePage } from '../pages/welcome/welcome';
-import { LoginPage } from '../pages/login/login';
-import { SignupPage } from '../pages/signup/signup';
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
-import { WorkoutPage } from '../pages/workout/workout';
-import { StatsPage } from '../pages/stats/stats';
-import { WorkoutCreatePage } from '../pages/workout-create/workout-create';
-import { WorkoutShowPage } from '../pages/workout-show/workout-show';
-import { ExerciseCreatePage } from '../pages/exercise-create/exercise-create';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -43,16 +33,6 @@ const FIREBASE_CONFIG = {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    WelcomePage,
-    LoginPage,
-    SignupPage,
-    TabsPage,
-    StatsPage,
-    WorkoutPage,
-    WorkoutShowPage,
-    WorkoutCreatePage,
-    ExerciseCreatePage,
   ],
   imports: [
     BrowserModule,
@@ -67,16 +47,6 @@ const FIREBASE_CONFIG = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    WelcomePage,
-    LoginPage,
-    SignupPage,
-    HomePage,
-    TabsPage,
-    StatsPage,
-    WorkoutPage,
-    WorkoutShowPage,
-    WorkoutCreatePage,
-    ExerciseCreatePage,
   ],
   providers: [
     UserService,
