@@ -45,7 +45,4 @@ export class WorkoutCreatePage {
       console.log("We didn't successfully save the workout!");
     });
   }
-
-  
-
 }
