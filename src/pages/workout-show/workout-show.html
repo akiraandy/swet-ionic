@@ -1,12 +1,12 @@
-<ion-header>
+<ion-content padding id="workout-show" [class.blur]="applyBlur">
 
-  <ion-navbar>
-    <ion-title>workout-show</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
-<ion-content padding id="workout-show">
+  <ion-list>
+    <ion-item>{{workout.title}}</ion-item>
+    <ion-item>Number of exercises: {{exercises.length}}
+      <button ion-button item-end color="approve" (click)="goToExerciseCreatePage()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

@@ -24,8 +24,7 @@ export class WorkoutPage {
   }
 
   addWorkout() {
-    console.log("Going to create workout page");
-    let modal = this.modalCtrl.create(WorkoutCreatePage);
+    let modal = this.modalCtrl.create(WorkoutCreatePage, {enableBackdropDismiss: true});
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
@@ -44,6 +43,7 @@ export class WorkoutPage {
    this.getWorkouts();
   }
 
+
   refresh(refresher){
       this.workouts = [];
       this.getWorkouts();
@@ -59,7 +59,7 @@ export class WorkoutPage {
     loader.present().then(() => {
       this._DB.getWorkouts(this.user.id)
       .subscribe(res => {
-        console.log("SUCESS", res);
+        console.log("SUCCESS", res);
         this.workouts.push(res)
       });
     });
@@ -77,6 +77,10 @@ export class WorkoutPage {
 
   resetBlur(){
     this.fabOpened = false;
+  }
+
+  addBlur(){
+    this.fabOpened = true;
   }
 
   fabContainerClicked(fab: FabContainer){

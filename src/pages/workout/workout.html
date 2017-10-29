@@ -1,4 +1,4 @@
-<ion-content padding id="workout">
+<ion-content padding id="workout" (click)="closeFab(fab1); resetBlur()">
   <ion-refresher (ionRefresh)="refresh($event)">
     <ion-refresher-content 
       pullingIcon="arrow-dropdown"
@@ -7,22 +7,20 @@
       refreshingText="Getting workouts...">
     </ion-refresher-content>
   </ion-refresher>
-  
-  <div>
-    <ion-fab top right #fab1>
-      <button ion-fab mini (click)="fabContainerClicked(fab1)" color="secondary"><ion-icon name="expand" color="light"></ion-icon></button>
-      <ion-fab-list>
-        <button ion-fab (click)="addWorkout(); closeFab(fab1)" color="primary"><ion-icon name="add" color="light"></ion-icon></button>
-        <button ion-fab color="primary" (click)="closeFab(fab1)"><ion-icon name="search" color="light"></ion-icon></button>
-      </ion-fab-list>
-    </ion-fab>
-  </div>
 
-  <div [class.blur]="fabOpened">
+  <div [class.blur]="fabOpened" >
     <ion-list>
       <ion-item *ngFor="let workout of workouts" (click)="goToWorkoutShowPage(workout)">{{workout.title}} {{workout.date}}</ion-item>
     </ion-list>
   </div>
-  
-
 </ion-content>
+
+<div>
+  <ion-fab top right #fab1>
+    <button ion-fab mini (click)="fabContainerClicked(fab1)" color="secondary"><ion-icon name="expand" color="light"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab (click)="addWorkout(); addBlur(); closeFab(fab1)" color="primary"><ion-icon name="add" color="light"></ion-icon></button>
+      <button ion-fab color="primary" (click)="closeFab(fab1)"><ion-icon name="search" color="light"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+</div>

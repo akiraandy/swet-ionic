@@ -39,8 +39,17 @@ $colors: (
   energy:     #962130,
   light:      #f4f4f4,
   dark:       #1f1111,
-  faint:      #F6E191
+  faint:      #F6E191,
+  approve:    #6cc225
 );
+
+.blur {
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+}
 
 
 // App iOS Variables
