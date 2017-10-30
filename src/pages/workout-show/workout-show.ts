@@ -59,9 +59,11 @@ export class WorkoutShowPage {
   goToExerciseCreatePage(){
     let modal = this.modalCtrl.create("ExerciseCreatePage", {workout_id: this.navParams.get("id")});
     this.addBlur();
-    modal.onDidDismiss(res => {
+    modal.onDidDismiss(exercise => {
       this.removeBlur();
-      this.getWorkout();
+      if (exercise){
+        this.getWorkout();
+      }
     });
     modal.present();
   }
@@ -72,6 +74,16 @@ export class WorkoutShowPage {
 
   removeBlur(){
     this.applyBlur = false;
+  }
+
+  goToSetAndRepPage(){
+    let modal = this.modalCtrl.create("SetAndRepCreatePage", {workout_id: this.navParams.get("id")});
+    this.addBlur();
+    modal.onDidDismiss(res => {
+      this.removeBlur();
+      this.getWorkout();
+    });
+    modal.present();
   }
 
 

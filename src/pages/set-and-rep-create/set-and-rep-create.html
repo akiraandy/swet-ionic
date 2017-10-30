@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>setAndRepCreate</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding id="set_form">
+  <form [formGroup]="set_form">
+    <ion-item>
+      <ion-label floating># of reps: </ion-label>
+      <ion-input formControlName="reps" [(ngModel)]="set.reps"></ion-input>
+    </ion-item>
+  </form>
+
+  <button ion-button (click)="close()">Cancel</button>
+  <button ion-button (click)="submit()">Submit</button>
+</ion-content>

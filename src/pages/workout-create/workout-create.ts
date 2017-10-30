@@ -14,6 +14,7 @@ export class WorkoutCreatePage {
 
   private workout_form : FormGroup;
   workout = Workout;
+  trans = true;
 
   constructor(private user: UserService, 
     public viewCtrl: ViewController, 

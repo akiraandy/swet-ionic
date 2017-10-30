@@ -7,6 +7,9 @@
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-item>
+    <ion-item *ngFor="let exercise of exercises">{{exercise.name}} <button ion-button item-end color="approve" (click)="goToSetAndRepPage()">
+        <ion-icon name="add"></ion-icon>
+      </button></ion-item>
   </ion-list>
 
 </ion-content>
