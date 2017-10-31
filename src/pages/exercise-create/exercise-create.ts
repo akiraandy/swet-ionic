@@ -35,14 +35,13 @@ export class ExerciseCreatePage {
     let user_id = this.user.id;
     let workout_id = this.navParams.get("workout_id");
     this._DB.addExercise(exercise, workout_id, user_id)
-    .subscribe(res => {
-      console.log("Added Exercise!", res);
-      this.close();
+    .subscribe(exercise => {
+      this.close(exercise);
     });
   }
 
-  close() {
-    this.viewCtrl.dismiss();
+  close(exercise?) {
+    this.viewCtrl.dismiss(exercise);
   }
 
   

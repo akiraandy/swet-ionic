@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { IonicPage, ViewController, ToastController } from 'ionic-angular';
 import { Workout } from '../../models/workout';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
@@ -14,6 +14,7 @@ export class WorkoutCreatePage {
 
   private workout_form : FormGroup;
   workout = Workout;
+  trans = true;
 
   constructor(private user: UserService, 
     public viewCtrl: ViewController, 

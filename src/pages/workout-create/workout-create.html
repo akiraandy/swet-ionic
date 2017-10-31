@@ -1,16 +1,17 @@
-<form [formGroup]="workout_form" (ngSubmit)="workoutForm()">
+<ion-content padding id="workout-create">
+  <form [formGroup]="workout_form" (ngSubmit)="workoutForm()">
 
-  <ion-item>
-      <ion-label floating>Title</ion-label>
-      <ion-input type="text" formControlName="title" [(ngModel)]="workout.title"></ion-input>
-  </ion-item>
+    <ion-item>
+        <ion-label floating>Title</ion-label>
+        <ion-input type="text" formControlName="title" [(ngModel)]="workout.title"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Date</ion-label>
-    <ion-input type="datetime-local" formControlName="date" [(ngModel)]="workout.date"></ion-input>
-  </ion-item>
-</form>
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-input type="datetime-local" formControlName="date" [(ngModel)]="workout.date"></ion-input>
+    </ion-item>
+  </form>
 
-<button ion-button round (click)="close()">Cancel</button>
-<button ion-button round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button>
-
+  <button ion-button round (click)="close()">Cancel</button>
+  <button ion-button round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button>
+</ion-content>

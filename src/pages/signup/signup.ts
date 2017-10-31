@@ -1,9 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from '../../models/user';
 import { FirebaseErrorParserProvider } from '../../providers/firebase-error-parser';
-import { LoginPage } from '../login/login';
 import { FirebaseService } from '../../services/firebase-service';
 
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -67,7 +66,7 @@ export class SignupPage {
           message: "Please check your email to verify your account.",
           duration: 3000,
         }).present().then(res => {
-          this.navCtrl.push(LoginPage);
+          this.navCtrl.push("LoginPage");
           this.navCtrl.remove(1);
         });
       }).catch(error => {
