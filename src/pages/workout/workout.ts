@@ -27,13 +27,13 @@ export class WorkoutPage {
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
+        this.getWorkouts();
         this.toast.create({
           message: "Workout created!",
           position: "top",
           duration: 3000
         }).present();
       }
-      this.getWorkouts();
     });
     modal.present();
   }
