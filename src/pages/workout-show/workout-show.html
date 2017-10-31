@@ -7,7 +7,7 @@
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-item>
-    <ion-item *ngFor="let exercise of exercises">{{exercise.name}} # of sets: {{exercise.setCount}} Total reps: {{exercise.repCount}}<button ion-button item-end color="approve" (click)="createSet(exercise)">
+    <ion-item *ngFor="let exercise of exercises">{{exercise.name}} <ion-icon name="list">{{exercise.setCount}}</ion-icon> <ion-icon name="repeat">{{exercise.repCount}}</ion-icon><button ion-button item-end color="approve" (click)="createSet(exercise)">
         <ion-icon name="add"></ion-icon>
       </button><button *ngIf="exercise.setCount >= 1"ion-button item-end color="primary" (click)="goToRepCreatePage(exercise)">
         <ion-icon name="add"></ion-icon>
