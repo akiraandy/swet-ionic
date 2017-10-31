@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
-import { Validators, FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
 import { Set } from '../../models/set';
 import { UserService } from '../../services/user-service';
@@ -19,21 +19,26 @@ export class RepsCreatePage {
 
   formErrors = {
     sets: [
-      { count: '', weight: ''}
+      { repCount: '', weight: '', setCount: ''}
     ]
   };
 
   validationMessages = {
     sets: {
-      count: {
-        required: 'Rep count is required.',
-        min: 'Rep count must be greater than 0.',
-        max: 'Rep count must be less than 100.'
+      repCount: {
+        required: 'Rep repCount is required',
+        min: 'Rep repCount must be greater than 0',
+        max: 'Rep repCount must be less than 100'
       },
       weight: {
-        required: 'Set weight is required.',
-        min: 'Weight must be greater than 0.',
-        max: 'Weight must less than 1000.',
+        required: 'Set weight is required',
+        min: 'Weight must be greater than 0',
+        max: 'Weight must less than 1000',
+      },
+      setCount: {
+        required: 'Set count is required',
+        min: 'Set count must be greater than 0',
+        max: 'Set count must be less than 50'
       }
     }
   };
@@ -52,8 +57,27 @@ export class RepsCreatePage {
         ])
       });
 
+      this.exercise_form.disable
+
       this.exercise_form.valueChanges.subscribe(data => this.validateSets());
-      
+  }
+
+  checkboxClicked(){
+    this.exercise_form.reset();
+    this.toggleSetCountValidator();
+  }
+
+  toggleSetCountValidator(){
+    let sets = this.getSetFormArray();
+    let set = <FormGroup>sets.at(0);
+    let setCountControl = <FormControl>set.get("setCount");
+    if (this.uniform){
+      setCountControl.enable();
+      setCountControl.updateValueAndValidity();
+    } else {
+        setCountControl.disable();
+        setCountControl.updateValueAndValidity();
+    }
   }
 
   validateSets(){
@@ -63,7 +87,7 @@ export class RepsCreatePage {
 
     let n = 1;
     while (n <= sets.length) {
-      this.formErrors.sets.push({ count: '', weight: ''});
+      this.formErrors.sets.push({ repCount: '', weight: '', setCount: ''});
 
       let set = <FormGroup>sets.at(n - 1);
 
@@ -98,10 +122,6 @@ export class RepsCreatePage {
     let sets = this.getSetFormArray();
     if (this.uniform && sets.length > 0){
       for (let i = sets.length - 1; i > 0 ; i--) {
-        console.log(i);
-        console.log(sets.length);
-        
-        
         sets.removeAt(i);
       }
     }
@@ -109,8 +129,9 @@ export class RepsCreatePage {
 
   createSet(){
     return this.form.group({
-      count: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
-      weight: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(1000)])]
+      repCount: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
+      weight: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(1000)])],
+      setCount: [{value: '', disabled: true}, Validators.compose([Validators.required, Validators.min(1), Validators.max(25)])],
     });
   }
 
@@ -138,7 +159,7 @@ export class RepsCreatePage {
 
   submit() {
     console.log(this.exercise_form.value.sets);
-     
+    
   }
   
   createRepsForSet(weight, repCount){
