@@ -49,7 +49,7 @@ export class RepsCreatePage {
   }
 
   close() {
-    this.viewCtrl.dismiss();
+    this.navCtrl.pop();
   }
   
   submit(set){
@@ -66,6 +66,7 @@ export class RepsCreatePage {
           console.log("Something went wrong!");
         });
       }
+
     });
   }
 }

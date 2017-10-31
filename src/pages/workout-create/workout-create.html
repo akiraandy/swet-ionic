@@ -1,5 +1,5 @@
 <ion-content padding id="workout-create">
-  <form [formGroup]="workout_form" (ngSubmit)="workoutForm()">
+  <form [formGroup]="workout_form">
 
     <ion-item>
         <ion-label floating>Title</ion-label>
@@ -7,6 +7,10 @@
     </ion-item>
   </form>
 
-  <button ion-button round (click)="close()">Cancel</button>
-  <button ion-button round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button>
+  <ion-grid>
+    <ion-row>
+      <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
+      <ion-col><button ion-button full round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button></ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

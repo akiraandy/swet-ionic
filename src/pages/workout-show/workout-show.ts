@@ -119,11 +119,6 @@ export class WorkoutShowPage {
   }
 
   goToRepCreatePage(exercise) {
-    let modal = this.modalCtrl.create("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.navParams.get("id")});
-    modal.onDidDismiss( () => {
-      this.removeBlur();
-    });
-    this.addBlur();
-    modal.present();
+    this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.navParams.get("id")});
   }
 }

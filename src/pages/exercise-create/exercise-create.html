@@ -5,10 +5,15 @@
           <ion-label floating>Name</ion-label>
           <ion-input type="text" formControlName="name" [(ngModel)]="exercise.name" value=""></ion-input>
       </ion-item>
-
-      <button ion-button type="submit" [disabled]="!exercise_form.valid" (click)="createExercise(exercise)">Submit</button>
-      <button ion-button (click)="close()">Cancel</button>
   </form>
+  <ion-grid>
+    <ion-row>
+      <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
+      <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid" (click)="createExercise(exercise)">Submit</button></ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  
 </ion-content>
 
 
