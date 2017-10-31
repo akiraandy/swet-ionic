@@ -38,6 +38,14 @@ export class RepsCreatePage {
       
   }
 
+  addSet(){
+    let sets = <FormArray>this.exercise_form.get('sets');
+    sets.push(this.form.group({
+      count: [''],
+      weight: [''],
+    }));
+  }
+
   ionViewDidLoad() {
     this.getSets();
   }
