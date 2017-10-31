@@ -46,6 +46,11 @@ export class RepsCreatePage {
     }));
   }
 
+  removeSet(i){
+    let sets = <FormArray>this.exercise_form.get('sets');
+    sets.removeAt(i);
+  }
+
   ionViewDidLoad() {
     this.getSets();
   }
