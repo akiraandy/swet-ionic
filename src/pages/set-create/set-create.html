@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>setAndRepCreate</ion-title>
+    <ion-title>Number of sets for {{exercise_name}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,7 +10,7 @@
   <form [formGroup]="set_form">
     <ion-item>
       <ion-label floating># of reps: </ion-label>
-      <ion-input formControlName="reps" [(ngModel)]="set.reps"></ion-input>
+      <ion-input type="number" formControlName="count" [(ngModel)]="set.count"></ion-input>
     </ion-item>
   </form>
 

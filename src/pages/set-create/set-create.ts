@@ -7,21 +7,27 @@ import { UserService } from '../../services/user-service';
 
 @IonicPage()
 @Component({
-  selector: 'page-set-and-rep-create',
-  templateUrl: 'set-and-rep-create.html',
+  selector: 'page-set-create',
+  templateUrl: 'set-create.html',
 })
-export class SetAndRepCreatePage {
+export class SetCreatePage {
 
   set = {} as Set;
   set_form : FormGroup;
+  exercise_name : String;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     private form: FormBuilder,
     private viewCtrl: ViewController) {
+      
       this.set_form = this.form.group({
-        reps: ["", Validators.required]
+        count: ["", Validators.required]
       });
+  }
+
+  ionViewWillEnter(){
+    this.exercise_name = this.navParams.get("exercise_name");
   }
 
   close(){
@@ -29,7 +35,7 @@ export class SetAndRepCreatePage {
   }
 
   submit(){
-    
+
   }
 
 

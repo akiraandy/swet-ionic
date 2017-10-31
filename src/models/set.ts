@@ -1,3 +1,4 @@
 export interface Set {
-    reps: string;
+    rep_count: string;
+    weight: string;
 }
