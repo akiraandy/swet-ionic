@@ -147,7 +147,6 @@ export class FirebaseService {
             this._DB.collection("workouts").add({
                 user_id: user_id,
                 title: workout.title,
-                date: workout.date,
                 created_at: timestamp,
                 updated_at: timestamp
             }).then(res => {
@@ -167,7 +166,6 @@ export class FirebaseService {
                 user_id: user_id,
                 workout_id: workout_id,
                 name: exercise.name,
-                date: timestamp,
                 created_at: timestamp,
                 updated_at: timestamp
             }).then(res => {

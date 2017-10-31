@@ -6,11 +6,6 @@
           <ion-input type="text" formControlName="name" [(ngModel)]="exercise.name" value=""></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label floating>Date</ion-label>
-        <ion-input type="datetime-local" formControlName="date" [(ngModel)]="exercise.date" value=""></ion-input>
-      </ion-item>
-
       <button ion-button type="submit" [disabled]="!exercise_form.valid" (click)="createExercise(exercise)">Submit</button>
       <button ion-button (click)="close()">Cancel</button>
   </form>

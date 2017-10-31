@@ -24,7 +24,6 @@ export class WorkoutCreatePage {
     {
     this.workout_form = this.form.group({
       title: ["", Validators.compose([Validators.maxLength(30), Validators.required])],
-      date: ["", Validators.required]
     });
   }
 
