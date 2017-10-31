@@ -4,11 +4,17 @@
     <div *ngFor="let set of exercise_form.controls.sets.controls; let i=index;">
       <ion-list [formGroupName]="i">
         <ion-item>Set #{{ i + 1 }} <button *ngIf="exercise_form.controls.sets.controls.length > 1" ion-button round item-end (click)="removeSet()"><ion-icon name="trash"></ion-icon></button></ion-item>
+        <ion-label *ngIf="formErrors.sets[i].count">
+            {{ formErrors.sets[i].count }}
+          </ion-label>
         <ion-item>
           <ion-label>Count</ion-label>
           <ion-input type="number" formControlName="count"></ion-input>
         </ion-item>
         
+        <ion-label *ngIf="formErrors.sets[i].weight">
+            {{ formErrors.sets[i].weight }}
+          </ion-label>
         <ion-item>
           <ion-label>Weight</ion-label>
           <ion-input type="number" formControlName="weight"></ion-input>

@@ -16,6 +16,27 @@ export class RepsCreatePage {
   sets = [];
   uniform: boolean;
   exercise_form: FormGroup;
+
+  formErrors = {
+    sets: [
+      { count: '', weight: ''}
+    ]
+  };
+
+  validationMessages = {
+    sets: {
+      count: {
+        required: 'Rep count is required.',
+        min: 'Rep count must be greater than 0.',
+        max: 'Rep count must be less than 100.'
+      },
+      weight: {
+        required: 'Set weight is required.',
+        min: 'Weight must be greater than 0.',
+        max: 'Weight must less than 1000.',
+      }
+    }
+  };
   
 
   constructor(public navCtrl: NavController, 
@@ -27,28 +48,53 @@ export class RepsCreatePage {
     private user: UserService) {
       this.exercise_form = this.form.group({
         sets: this.form.array([
-          this.form.group({
-            count: [''],
-            weight: [''],
-          })
+            this.createSet()
         ])
       });
 
-      console.log(this.exercise_form);
+      this.exercise_form.valueChanges.subscribe(data => this.validateSets());
       
+  }
+
+  validateSets(){
+    let sets = <FormArray>this.exercise_form.get("sets");
+
+    this.formErrors.sets = [];
+
+    let n = 1;
+    while (n <= sets.length) {
+      this.formErrors.sets.push({ count: '', weight: ''});
+
+      let set = <FormGroup>sets.at(n - 1);
+
+      for (let field in set.controls) {
+        let input = set.get(field);
+
+        if (input.invalid && input.dirty) {
+          for (let error in input.errors) {
+            this.formErrors.sets[n - 1][field] = this.validationMessages.sets[field][error];
+          }
+        }
+      }
+      n++;
+    }
   }
 
   addSet(){
     let sets = <FormArray>this.exercise_form.get('sets');
-    sets.push(this.form.group({
-      count: [''],
-      weight: [''],
-    }));
+    sets.push(this.createSet());
   }
 
   removeSet(i){
     let sets = <FormArray>this.exercise_form.get('sets');
     sets.removeAt(i);
+  }
+
+  createSet(){
+    return this.form.group({
+      count: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
+      weight: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(1000)])]
+    });
   }
 
   ionViewDidLoad() {
