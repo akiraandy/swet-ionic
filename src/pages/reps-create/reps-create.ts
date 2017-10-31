@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
-import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
 import { Set } from '../../models/set';
 import { UserService } from '../../services/user-service';
@@ -15,7 +15,8 @@ export class RepsCreatePage {
   set = {} as Set;
   sets = [];
   uniform: boolean;
-  rep_form: FormGroup;
+  exercise_form: FormGroup;
+  
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -24,10 +25,17 @@ export class RepsCreatePage {
     private loading: LoadingController,
     private form: FormBuilder,
     private user: UserService) {
-      this.rep_form = this.form.group({
-        count: ["", Validators.required],
-        weight: ["", Validators.required],
+      this.exercise_form = this.form.group({
+        sets: this.form.array([
+          this.form.group({
+            count: [''],
+            weight: [''],
+          })
+        ])
       });
+
+      console.log(this.exercise_form);
+      
   }
 
   ionViewDidLoad() {
@@ -51,10 +59,12 @@ export class RepsCreatePage {
   close() {
     this.navCtrl.pop();
   }
-  
-  submit(set){
-    this.createRepsForSet(set.weight, set.rep_count);
+
+  submit() {
+    console.log(this.exercise_form.value);
   }
+  
+ 
 
   createRepsForSet(weight, repCount){
     this.sets.forEach(set => {

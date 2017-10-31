@@ -1,48 +1,30 @@
 <ion-content padding id="reps-create">
-  <ion-item *ngIf="sets.length > 0">
-    <ion-label>Same weight and count for all reps?</ion-label> 
-    <ion-checkbox [(ngModel)]="uniform"></ion-checkbox>
-  </ion-item>
-
-  <div *ngIf="uniform">
-    <form [formGroup]="rep_form">
-      <ion-list>
+<form [formGroup]="exercise_form" (ngSubmit)="submit()">
+  <div formArrayName="sets"> 
+    <div *ngFor="let set of exercise_form.controls.sets.controls; let i=index;">
+      <ion-list [formGroupName]="i">
+        <ion-item>Set #{{ i + 1 }}</ion-item>
         <ion-item>
-          <ion-label>Rep count: </ion-label>
-          <ion-input type="number" formControlName="count" [(ngModel)]="set.rep_count"></ion-input>
+          <ion-label>Count</ion-label>
+          <ion-input type="number" formControlName="count"></ion-input>
         </ion-item>
-
+        
         <ion-item>
-          <ion-label>Set weight: </ion-label>
-          <ion-input type="number" formControlName="weight" [(ngModel)]="set.weight"></ion-input>
+          <ion-label>Weight</ion-label>
+          <ion-input type="number" formControlName="weight"></ion-input>
         </ion-item>
       </ion-list>
-    </form>
+    </div>
   </div>
-
-  <div *ngIf="!uniform"> 
-    <form *ngFor="let set of sets" [formGroup]="rep_form">
-      <ion-list>
-
-        <ion-item>{{set.id}}</ion-item>
-        <ion-item>
-          <ion-label>Rep count: </ion-label>
-          <ion-input type="number" formControlName="count" [(ngModel)]="set.rep_count"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Set weight: </ion-label>
-          <ion-input type="number" formControlName="weight" [(ngModel)]="set.weight"></ion-input>
-        </ion-item>
-      </ion-list>
-    </form>
-</div>
   <ion-grid>
-    <ion-row>
-      <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
-      <ion-col><button ion-button full round type="submit" [disabled]="!rep_form.valid" (click)="submit(set)">Submit</button></ion-col>
-    </ion-row>
-  </ion-grid>
+      <ion-row>
+        <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
+        <ion-col><button ion-button full round type="submit">Submit</button></ion-col>
+      </ion-row>
+    </ion-grid>
+</form>
+
+  
   
   
 </ion-content>
