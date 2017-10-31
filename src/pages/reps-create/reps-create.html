@@ -1,5 +1,10 @@
 <ion-content padding id="reps-create">
-<form [formGroup]="exercise_form" (ngSubmit)="submit()">
+  <ion-item>
+    <ion-label>Same count and weight for all reps?</ion-label> 
+    <ion-checkbox [(ngModel)]="uniform" (ionChange)="removeAllSets()"></ion-checkbox>
+  </ion-item>
+
+  <form [formGroup]="exercise_form" (ngSubmit)="submit()">
   <div formArrayName="sets"> 
     <div *ngFor="let set of exercise_form.controls.sets.controls; let i=index;">
       <ion-list [formGroupName]="i">
@@ -24,11 +29,11 @@
   </div>
   <ion-grid>
     <ion-row>
-      <ion-col><button ion-button block (click)="addSet()">Add Set</button></ion-col>
+      <ion-col><button ion-button block [disabled]="uniform"(click)="addSet()">Add Set</button></ion-col>
     </ion-row>
       <ion-row>
         <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
-        <ion-col><button ion-button full round type="submit">Submit</button></ion-col>
+        <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid">Submit</button></ion-col>
       </ion-row>
     </ion-grid>
 </form>

@@ -81,13 +81,30 @@ export class RepsCreatePage {
   }
 
   addSet(){
-    let sets = <FormArray>this.exercise_form.get('sets');
+    let sets = this.getSetFormArray();
     sets.push(this.createSet());
   }
 
+  getSetFormArray() {
+    return <FormArray>this.exercise_form.get('sets');
+  }
+
   removeSet(i){
-    let sets = <FormArray>this.exercise_form.get('sets');
+    let sets = this.getSetFormArray();
     sets.removeAt(i);
+  }
+
+  removeAllSets(){
+    let sets = this.getSetFormArray();
+    if (this.uniform && sets.length > 0){
+      for (let i = sets.length - 1; i > 0 ; i--) {
+        console.log(i);
+        console.log(sets.length);
+        
+        
+        sets.removeAt(i);
+      }
+    }
   }
 
   createSet(){
@@ -120,11 +137,10 @@ export class RepsCreatePage {
   }
 
   submit() {
-    console.log(this.exercise_form.value);
+    console.log(this.exercise_form.value.sets);
+     
   }
   
- 
-
   createRepsForSet(weight, repCount){
     this.sets.forEach(set => {
       for (let i = 0; i < repCount; i++){
