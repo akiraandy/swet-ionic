@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ exercise.name }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list *ngFor="let set of exercise.sets; let i=index;">
+    <ion-item> Set# {{ i + 1 }}</ion-item>
+    <ion-item>Rep count: {{ set.reps.length }}</ion-item>
+    <ion-item>Weight: {{ set.weight  }}</ion-item>
+  </ion-list>
+
+
+</ion-content>

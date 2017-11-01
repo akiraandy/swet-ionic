@@ -200,7 +200,7 @@ export class RepsCreatePage {
   }
 
   createSetWithReps(repCount, weight){
-    this._DB.addSet(this.user.id, this.workout_id, this.exercise_id)
+    this._DB.addSet(this.user.id, this.workout_id, this.exercise_id, weight)
     .subscribe(set => {
       for (let i = 0; i < repCount; i++) {
         this._DB.addRepToSet(this.user.id, this.workout_id, this.exercise_id, set, weight);

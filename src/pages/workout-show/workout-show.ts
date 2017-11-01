@@ -94,4 +94,8 @@ export class WorkoutShowPage {
   goToRepCreatePage(exercise) {
     this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.navParams.get("id")});
   }
+
+  navigateToExercise(exercise){
+    this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name});
+  }
 }

@@ -179,10 +179,11 @@ export class FirebaseService {
         });
     }
 
-    addSet(user_id, workout_id, exercise_id){
+    addSet(user_id, workout_id, exercise_id, weight){
         return new Observable ((observer) => {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
             this._DB.collection("sets").add({
+                weight: weight,
                 user_id: user_id,
                 workout_id: workout_id,
                 exercise_id: exercise_id,
@@ -206,7 +207,7 @@ export class FirebaseService {
             .get()
             .then((querySnapshot) => {
                 querySnapshot.docs.forEach(set => {
-                    observer.next(set);
+                    observer.next({id: set.id});
                 });
                 observer.complete();
             }).catch(error => {
@@ -251,10 +252,46 @@ export class FirebaseService {
         });
     }
 
-    stuff(doc){
-        this._DB.collection('sets').get(doc).then(res => {
-            console.log(res);
+    getReps(set) {
+        return new Observable(observer => {
+            this._DB.collection("reps")
+            .where("set_id", "==", set.id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(repData => {
+                    let rep = {};
+                    rep["id"] = repData.id;
+                    rep["weight"] = repData.data().weight;
+                    observer.next(rep);
+                })
+            }).catch(error => {
+                console.log("error occurred", error);
+                observer.error(error);
+            });
         });
+    }
+
+    getSetsWithReps(exercise_id){
+        return new Observable ((observer) => {
+            this._DB.collection("sets")
+            .where("exercise_id", "==", exercise_id)
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.docs.forEach(setData => {
+                    let set = {id: "", reps: [], weight: ""};
+                    set["id"] = setData.id;
+                    set["weight"] = setData.data().weight;
+                    set["reps"] = [];
+                    this.getReps(setData).subscribe(rep => {
+                        set.reps.push(rep);
+                        });
+                    observer.next(set);
+                    });
+            }).catch(error => {
+                observer.error(error);
+                console.log(error);
+            });
+        }); 
     }
 
     getRepCountForExercise(exercise_id) {
