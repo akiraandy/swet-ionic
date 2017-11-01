@@ -22,7 +22,6 @@ export class ExerciseCreatePage {
     private _DB: FirebaseService) {
       this.exercise_form = this.form.group({
         name: ["", Validators.compose([Validators.maxLength(15), Validators.required])],
-        date: ["", Validators.required]
       });
     
   }
