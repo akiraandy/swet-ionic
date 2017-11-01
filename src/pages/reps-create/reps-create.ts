@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
 import { Set } from '../../models/set';
@@ -16,6 +16,8 @@ export class RepsCreatePage {
   sets = [];
   uniform: boolean;
   exercise_form: FormGroup;
+  workout_id: string;
+  exercise_id: string;
 
   formErrors = {
     sets: [
@@ -50,10 +52,15 @@ export class RepsCreatePage {
     private _DB: FirebaseService,
     private loading: LoadingController,
     private form: FormBuilder,
-    private user: UserService) {
+    private user: UserService,
+    private toast: ToastController) {
+
+      this.workout_id = this.navParams.get("workout_id");
+      this.exercise_id = this.navParams.get("exercise_id");
+
       this.exercise_form = this.form.group({
         sets: this.form.array([
-            this.createSet()
+            this.setControls()
         ])
       });
 
@@ -106,7 +113,7 @@ export class RepsCreatePage {
 
   addSet(){
     let sets = this.getSetFormArray();
-    sets.push(this.createSet());
+    sets.push(this.setControls());
   }
 
   getSetFormArray() {
@@ -127,7 +134,7 @@ export class RepsCreatePage {
     }
   }
 
-  createSet(){
+  setControls(){
     return this.form.group({
       repCount: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(100)])],
       weight: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(1000)])],
@@ -157,22 +164,54 @@ export class RepsCreatePage {
     this.navCtrl.pop();
   }
 
-  submit() {
-    console.log(this.exercise_form.value.sets);
-    
-  }
-  
-  createRepsForSet(weight, repCount){
-    this.sets.forEach(set => {
-      for (let i = 0; i < repCount; i++){
-        this._DB.addRepToSet(this.user.id, this.navParams.get("workout_id"), this.navParams.get("exercise_id"), set.id, weight)
-        .then(res => {
-          console.log("Created rep!");
-        }).catch(error => {
-          console.log("Something went wrong!");
-        });
-      }
-
+  exitAfterLoading(){
+    let loader = this.loading.create({
+      content: "Uploading..."
     });
+
+    loader.present();
+
+    setTimeout(() => {
+      loader.dismiss();
+      this.close();
+    }, 4000);
+  }
+
+  condensedSet(condensedSet){
+    let set = {count: 0, reps: 0, weight: 0};
+    set.count = parseInt(condensedSet.setCount, 10);
+    set.reps = parseInt(condensedSet.repCount, 10);
+    set.weight = parseInt(condensedSet.weight, 10);
+    return set;
+  }
+
+  submit() {
+    if (this.exercise_form.value.sets[0].setCount) {
+      let set = this.condensedSet(this.exercise_form.value.sets[0]);
+      for (let i = 0; i < set.count; i++) {
+        this.createSetWithReps(set.reps, set.weight);
+      };
+    } else {
+      this.exercise_form.value.sets.forEach(set => {
+        this.createSetWithReps(parseInt(set.repCount, 10), parseInt(set.weight, 10));
+      })
+    }
+    this.exitAfterLoading();
+  }
+
+  createSetWithReps(repCount, weight){
+    this._DB.addSet(this.user.id, this.workout_id, this.exercise_id)
+    .subscribe(set => {
+      for (let i = 0; i < repCount; i++) {
+        this._DB.addRepToSet(this.user.id, this.workout_id, this.exercise_id, set, weight);
+      }
+    }, error => this.createToast());
+  }
+
+  createToast(){
+    this.toast.create({
+      message: "An error occurred.",
+      duration: 3000
+    }).present();
   }
 }

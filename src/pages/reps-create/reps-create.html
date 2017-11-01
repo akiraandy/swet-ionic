@@ -4,45 +4,41 @@
     <ion-checkbox [(ngModel)]="uniform" (ionChange)="removeAllSets(); checkboxClicked();"></ion-checkbox>
   </ion-item>
 
-  <form [formGroup]="exercise_form" (ngSubmit)="submit()">
-  <div formArrayName="sets"> 
-    <div *ngFor="let set of exercise_form.controls.sets.controls; let i=index;">
-      <ion-list [formGroupName]="i">
-        <ion-item *ngIf="!uniform">Set #{{ i + 1 }} <button *ngIf="exercise_form.controls.sets.controls.length > 1" ion-button round item-end (click)="removeSet()"><ion-icon name="trash"></ion-icon></button></ion-item>
-        <ion-item *ngIf="uniform">
-          <ion-label>Set count</ion-label>
-          <ion-input type="number" formControlName="setCount"></ion-input>
-        </ion-item>
-        <ion-label *ngIf="formErrors.sets[i].repCount">
-            {{ formErrors.sets[i].count }}
-          </ion-label>
-        <ion-item>
-          <ion-label>Rep count</ion-label>
-          <ion-input type="number" formControlName="repCount"></ion-input>
-        </ion-item>
-        
-        <ion-label *ngIf="formErrors.sets[i].weight">
-            {{ formErrors.sets[i].weight }}
-          </ion-label>
-        <ion-item>
-          <ion-label>Weight</ion-label>
-          <ion-input type="number" formControlName="weight"></ion-input>
-        </ion-item>
-      </ion-list>
+  <form [formGroup]="exercise_form">
+    <div formArrayName="sets"> 
+      <div *ngFor="let set of exercise_form.controls.sets.controls; let i=index;">
+        <ion-list [formGroupName]="i">
+          <ion-item *ngIf="!uniform">Set #{{ i + 1 }} <button *ngIf="exercise_form.controls.sets.controls.length > 1" ion-button round item-end (click)="removeSet()"><ion-icon name="trash"></ion-icon></button></ion-item>
+          <ion-item *ngIf="uniform">
+            <ion-label>Set count</ion-label>
+            <ion-input type="number" formControlName="setCount"></ion-input>
+          </ion-item>
+          <ion-label *ngIf="formErrors.sets[i].repCount">
+              {{ formErrors.sets[i].count }}
+            </ion-label>
+          <ion-item>
+            <ion-label>Rep count</ion-label>
+            <ion-input type="number" formControlName="repCount"></ion-input>
+          </ion-item>
+          
+          <ion-label *ngIf="formErrors.sets[i].weight">
+              {{ formErrors.sets[i].weight }}
+            </ion-label>
+          <ion-item>
+            <ion-label>Weight</ion-label>
+            <ion-input type="number" formControlName="weight"></ion-input>
+          </ion-item>
+        </ion-list>
+      </div>
     </div>
-  </div>
-  <ion-grid>
-    <ion-row>
-      <ion-col><button ion-button block [disabled]="uniform"(click)="addSet()">Add Set</button></ion-col>
-    </ion-row>
+    <ion-grid>
       <ion-row>
-        <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
-        <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid">Submit</button></ion-col>
+        <ion-col><button ion-button block [disabled]="uniform"(click)="addSet()">Add Set</button></ion-col>
       </ion-row>
-    </ion-grid>
-</form>
-
-  
-  
-  
+        <ion-row>
+          <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
+          <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid" (click)="submit()">Submit</button></ion-col>
+        </ion-row>
+      </ion-grid>
+  </form>
 </ion-content>

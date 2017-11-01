@@ -69,7 +69,7 @@ export class FirebaseService {
                     let workout = {};
                     workout["id"] = workoutData.id;
                     workout["title"] = workoutData.data().title
-                    workout["date"] = moment(workoutData.data().date).fromNow();
+                    workout["date"] = moment(workoutData.data().created_at).fromNow();
                     observer.next(workout);
                 });
                 observer.complete();
@@ -230,14 +230,14 @@ export class FirebaseService {
         });
     }
 
-    addRepToSet(user_id, workout_id, exercise_id, set_id, weight) {
+    addRepToSet(user_id, workout_id, exercise_id, set, weight) {
         return new Promise((resolve, reject) => {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp(); 
+            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
             this._DB.collection("reps").add({
                 user_id: user_id,
                 workout_id: workout_id,
                 exercise_id: exercise_id,
-                set_id: set_id,
+                set_id: set.id,
                 weight: weight,
                 created_at: timestamp,
                 updated_at: timestamp
@@ -248,6 +248,12 @@ export class FirebaseService {
                 console.log("Error when committing to database: ", error);
                 reject(error);
             });
+        });
+    }
+
+    stuff(doc){
+        this._DB.collection('sets').get(doc).then(res => {
+            console.log(res);
         });
     }
 

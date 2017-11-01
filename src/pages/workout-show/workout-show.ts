@@ -23,8 +23,8 @@ export class WorkoutShowPage {
                 this.workout["date"] ="";
   }
 
-  ionViewDidLoad() {
-    this.getWorkout()
+  ionViewWillEnter(){
+    this.getWorkout();
   }
 
   clearData(){
@@ -42,7 +42,6 @@ export class WorkoutShowPage {
       this._DB.getWorkout(this.navParams.get("id"))
       .subscribe(workout => {
         this.workout = workout;
-        console.log(this.workout);
       });
 
       this._DB.getExercisesFromWorkout(this.navParams.get("id"))
@@ -50,7 +49,6 @@ export class WorkoutShowPage {
         this.exercises.push(exercise);
         this.getSetCount(exercise);
         this.getRepCount(exercise);
-        console.log(this.exercises);
       });
     });
     loader.dismiss();
@@ -76,26 +74,6 @@ export class WorkoutShowPage {
     this.applyBlur = false;
   }
 
-  goToSetCreatePage(exercise){
-    let modal = this.modalCtrl.create("SetCreatePage", {workout_id: this.navParams.get("id"), exercise_name: exercise.name});
-    this.addBlur();
-    modal.onDidDismiss(res => {
-      this.removeBlur();
-      this.getWorkout();
-    });
-    modal.present();
-  }
-
-  createSet(exercise){
-    console.log(exercise);
-    
-    this._DB.addSet(this.user.id, this.navParams.get("id"), exercise.id)
-    .subscribe(res => {
-      console.log("Successfully created set");
-    });
-    this.updateSetCount(exercise);
-  }
-
   getSetCount(exercise){
     let sets = [];
     exercise["sets"] = [];
@@ -111,11 +89,6 @@ export class WorkoutShowPage {
     .subscribe(res => {
       exercise["repCount"] = res;
     });
-  }
-
-  updateSetCount(exercise) {
-    this._DB.getSetCount(exercise.id)
-    .subscribe(setCount => exercise["setCount"] = setCount);
   }
 
   goToRepCreatePage(exercise) {
