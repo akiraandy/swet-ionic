@@ -1,5 +1,5 @@
 export interface Set {
     id: String;
-    rep_count: string;
+    reps: Array<any>;
     weight: string;
 }

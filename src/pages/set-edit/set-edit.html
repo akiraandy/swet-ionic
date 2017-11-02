@@ -1,0 +1,28 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Edit Set</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <form [formGroup]="set_form">
+    <ion-list>
+      <ion-item>
+        <ion-label>Rep Count: </ion-label>
+        <ion-input type="number" [(ngModel)]="set.reps.length" formControlName="repCount"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Weight: </ion-label>
+        <ion-input type="number" [(ngModel)]="set.weight" formControlName="weight"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button (click)="close()">Back</button>
+    <button ion-button type="submit" [disabled]="!set_form.valid" (click)="submit()">Submit</button>
+  </form>
+  
+
+</ion-content>
