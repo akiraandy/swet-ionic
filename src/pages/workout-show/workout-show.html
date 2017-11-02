@@ -1,10 +1,14 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{workout.title}} </ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only clear color="danger" (click)="deleteWorkout()"><ion-icon name="trash" is-active="false"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+  
+</ion-header>
 <ion-content padding id="workout-show" [class.blur]="applyBlur">
-
   <ion-list>
-    <ion-list-header>
-      {{workout.title}}
-    </ion-list-header>
-
       <ion-item>
         Number of exercises: {{exercises.length}}
         <button ion-button item-end color="approve" (click)="goToExerciseCreatePage()">
@@ -25,6 +29,4 @@
         </ion-item-options>
       </ion-item-sliding>
   </ion-list>
-  <button ion-button block (click)="deleteWorkout()">Delete Workout</button>
-
 </ion-content>
