@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
+import { Workout } from '../models/workout';
 
 @Injectable()
 export class FirebaseService {
@@ -24,18 +25,31 @@ export class FirebaseService {
                     let workout = {};
                     workout["id"] = doc.id;
                     workout["title"] = doc.data().title
-                    workout["date"] = moment(doc.data().date).format('YYYY M D');
+                    workout["date"] = doc.data().created_at
                     observer.next(workout);
                 } else {
                     console.log("Doc does not exist!");
                 }
-                
                 observer.complete();
             }).catch(error => {
                 observer.error(error);
                 console.log("Error occurred while fetching workout: ", error);
             });
         })
+    }
+
+    getWorkoutWithExercises(workout_id){
+        let exercises = [];
+        let workoutObj : Workout;
+        this.getWorkout(workout_id)
+        .subscribe(workout => {
+            workoutObj = <Workout>workout;
+            this.getExercisesFromWorkout(workout_id)
+            .subscribe(exercise => {
+                workoutObj.exercises.push(exercise);
+            })
+        });
+        return workoutObj;
     }
 
     getWorkouts(user_id) {
@@ -48,8 +62,8 @@ export class FirebaseService {
                 querySnapshot.forEach(workoutData => {
                     let workout = {};
                     workout["id"] = workoutData.id;
-                    workout["title"] = workoutData.data().title
-                    workout["date"] = moment(workoutData.data().created_at).fromNow();
+                    workout["title"] = workoutData.data().title;
+                    workout["date"] = workoutData.data().created_at;
                     observer.next(workout);
                 });
                 observer.complete();

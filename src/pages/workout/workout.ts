@@ -30,7 +30,7 @@ export class WorkoutPage {
         this.getWorkouts();
         this.toast.create({
           message: "Workout created!",
-          position: "top",
+          position: "middle",
           duration: 3000
         }).present();
       }
@@ -58,7 +58,6 @@ export class WorkoutPage {
     loader.present().then(() => {
       this._DB.getWorkouts(this.user.id)
       .subscribe(res => {
-        console.log("SUCCESS", res);
         this.workouts.push(res)
       });
     });

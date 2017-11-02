@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ModalController, AlertController } from 'ionic-angular';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
+import { Workout } from '../../models/workout'
+import moment from 'moment';
 
 @IonicPage()
 @Component({
@@ -9,20 +11,25 @@ import { UserService } from '../../services/user-service';
   templateUrl: 'workout-show.html',
 })
 export class WorkoutShowPage {
-  workout = {};
+  workout = {} as Workout;
   exercises = [];
   applyBlur = false;
   workout_id : string;
+  workout_title :string
+  from_now : string;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private _DB: FirebaseService,
               public loading: LoadingController,
               private modalCtrl: ModalController,
-              private user: UserService){
-                this.workout["title"] = "";
-                this.workout["date"] ="";
-                this.workout_id = this.navParams.get("id")
+              private user: UserService,
+              public alertCtrl: AlertController){
+                this.workout.title = "";
+                this.workout.date = "";
+                this.workout.id = this.navParams.get("id");
+                this.from_now = "";
+
   }
 
   ionViewWillEnter(){
@@ -30,8 +37,13 @@ export class WorkoutShowPage {
   }
 
   clearData(){
-    this.workout = {};
+    this.workout = {id: "", title: "", date: "", exercises: []};
     this.exercises = [];
+  }
+
+  formatDate(){
+    this.from_now = moment(this.workout.date).fromNow();
+    this.workout.date = moment(this.workout.date).format('MMMM Do YYYY');
   }
 
   getWorkout(){
@@ -43,7 +55,8 @@ export class WorkoutShowPage {
     loader.present().then(() => {
       this._DB.getWorkout(this.navParams.get("id"))
       .subscribe(workout => {
-        this.workout = workout;
+        this.workout = <Workout>workout;
+        this.formatDate();
       });
 
       this._DB.getExercisesFromWorkout(this.navParams.get("id"))
@@ -94,11 +107,11 @@ export class WorkoutShowPage {
   }
 
   goToRepCreatePage(exercise) {
-    this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout_id});
+    this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout.id});
   }
 
   navigateToExercise(exercise){
-    this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout_id});
+    this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout.id});
   }
 
   deleteWorkout(){
@@ -117,4 +130,27 @@ export class WorkoutShowPage {
       });
     });
   }
+
+  showDeletePrompt() {
+    let prompt = this.alertCtrl.create({
+      title: "Delete workout",
+      message: "Are you sure you want to delete this workout?",
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log("Cancel clicked");
+          }
+        },
+        {
+          text: 'Delete',
+          handler: data => {
+            this.deleteWorkout();
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
 }
