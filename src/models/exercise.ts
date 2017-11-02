@@ -1,5 +1,7 @@
+import { Set } from './set';
+
 export interface Exercise {
     id : String;
     name : String;
-    date : Date;
+    sets : Array<any>;
 }

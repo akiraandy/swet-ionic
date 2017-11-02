@@ -1,0 +1,18 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title><span (click)="navigateToExerciseEditPage()">{{ exercise.name }}</span></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list *ngFor="let set of exercise.sets; let i=index;">
+    <ion-item> Set# {{ i + 1 }} <button *ngIf="exercise.sets.length > 1" ion-button float-right (click)="deleteSet(set)"><ion-icon name="trash"></ion-icon></button><button ion-button float-right (click)="navigateToSetEditPage(set)">Edit</button></ion-item>
+    <ion-item>Rep count: {{ set.reps.length }}</ion-item>
+    <ion-item>Weight: {{ set.weight  }}</ion-item>
+  </ion-list>
+
+  <button ion-button block (click)="deleteExercise()">Delete Exercise</button>
+</ion-content>

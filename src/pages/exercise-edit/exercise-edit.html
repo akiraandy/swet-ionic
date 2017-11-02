@@ -1,0 +1,24 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{exercise.name}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <form [formGroup]="exercise_form">
+    <ion-list>
+      <ion-item>
+        <ion-label>Name of exercise:</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button [disabled]="!exercise_form.valid" (click)="submit()">Submit</button>
+  </form>
+
+  <button ion-button (click)="close()">Cancel</button>
+
+</ion-content>

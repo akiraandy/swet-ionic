@@ -38,8 +38,8 @@ export class WorkoutPage {
     modal.present();
   }
 
-  ionViewDidLoad() {
-   this.getWorkouts();
+  ionViewWillEnter() {
+    this.getWorkouts();
   }
 
 
