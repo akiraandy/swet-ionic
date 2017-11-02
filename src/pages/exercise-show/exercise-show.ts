@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
 import { Exercise } from '../../models/exercise';
 import { FirebaseService } from '../../services/firebase-service';
 
@@ -18,7 +18,8 @@ export class ExerciseShowPage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     private _DB: FirebaseService,
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private loading: LoadingController) {
     this.exercise.name = this.navParams.get("exercise_name");
     this.exercise.id = this.navParams.get("exercise_id");
     this.workout_id = this.navParams.get("workout_id");
@@ -72,11 +73,18 @@ export class ExerciseShowPage {
   }
 
   deleteExercise() {
-    this._DB.deleteAllDependentOnExercise(this.exercise.id)
+    let loader = this.loading.create({
+      content: "Deleting data..."
+    });
+    loader.present()
     .then(() => {
-      this._DB.deleteExercise(this.exercise.id)
+      this._DB.deleteAllDependentOnExercise(this.exercise.id)
       .then(() => {
-        this.leave();
+        this._DB.deleteExercise(this.exercise.id)
+        .then(() => {
+          loader.dismiss();
+          this.leave();
+        });
       });
     });
   }

@@ -100,4 +100,21 @@ export class WorkoutShowPage {
   navigateToExercise(exercise){
     this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout_id});
   }
+
+  deleteWorkout(){
+    let loader = this.loading.create({
+      content: "Deleting workout..."
+    });
+    loader.present()
+    .then(() => {
+      this._DB.deleteAllDependentOnWorkout(this.workout_id)
+      .then(() => {
+        this._DB.deleteWorkout(this.workout_id)
+        .then(() => {
+          loader.dismiss();
+          this.navCtrl.pop();
+        });
+      });
+    });
+  }
 }

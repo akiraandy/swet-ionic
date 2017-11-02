@@ -478,4 +478,121 @@ export class FirebaseService {
             });
         });
     }
+
+    deleteAllDependentOnWorkout(workout_id) {
+        return new Promise ((resolve, reject) => {
+            this.deleteRepsFromWorkout(workout_id)
+            .then(() => {
+                this.deleteSetsFromWorkout(workout_id)
+                .then(() => {
+                    this.deleteExercisesFromWorkout(workout_id)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(error => {
+                        reject();
+                        console.log("Error occurred: ", error);
+                    });
+                })
+                .catch(error => {
+                    console.log("Error occured: ", error);
+                    reject();
+                });
+            }).catch(error => {
+                console.log("Error occured: ", error);
+                reject();
+            });
+        });
+    }
+
+    deleteExercisesFromWorkout(workout_id){
+        return new Promise ((resolve, reject) => {
+            this._DB.collection("exercises")
+            .where("workout_id", "==", workout_id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(exercise => {
+                    exercise.ref.delete()
+                    .then(() => {
+                        console.log("Successfully deleted exercise from workout");
+                    })
+                    .catch(error => {
+                        reject();
+                        console.log("Error occurred: ", error);
+                    });
+                });
+                resolve();
+            })
+            .catch(error => {
+                reject();
+                console.log("Error occurred: ", error);
+            });
+        });
+    }
+
+    deleteSetsFromWorkout(workout_id){
+        return new Promise ((resolve, reject) => {
+            this._DB.collection("sets")
+            .where("workout_id", "==", workout_id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(set => {
+                    set.ref.delete()
+                    .then(() => {
+                        console.log("Successfully deleted set from workout");
+                    })
+                    .catch(error => {
+                        reject();
+                        console.log("Error occurred: ", error);
+                    });
+                });
+                resolve();
+            })
+            .catch(error => {
+                reject();
+                console.log("Error occurred: ", error);
+            });
+        });
+    }
+
+    deleteRepsFromWorkout(workout_id){
+        return new Promise ((resolve, reject) => {
+            this._DB.collection("reps")
+            .where("workout_id", "==", workout_id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(rep => {
+                    rep.ref.delete()
+                    .then(() => {
+                        console.log("Successfully deleted rep from workout");
+                    })
+                    .catch(error => {
+                        reject();
+                        console.log("Error occurred: ", error);
+                    });
+                });
+                resolve();
+            })
+            .catch(error => {
+                reject();
+                console.log("Error occurred: ", error);
+            });
+        });
+    }
+
+    deleteWorkout(workout_id){
+        return new Promise((resolve, reject) => {
+            this._DB.collection("workouts")
+            .doc(workout_id)
+            .delete()
+            .then(() => {
+                console.log("Successfully deleted workout");
+                resolve();
+            })
+            .catch(error => {
+                console.log("Error occurred while trying to delete workout: ", error);
+                reject();
+            });
+        });
+    }
 }
