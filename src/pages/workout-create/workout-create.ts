@@ -13,7 +13,7 @@ import { UserService } from '../../services/user-service';
 export class WorkoutCreatePage {
 
   private workout_form : FormGroup;
-  workout = Workout;
+  workout : Workout;
   trans = true;
 
   constructor(private user: UserService, 
@@ -34,15 +34,14 @@ export class WorkoutCreatePage {
   submit(workout) {
     this._DB.addWorkout(workout, this.user.id)
     .then(res => {
-      console.log("We can close the modal!");
       this.close(res);
     })
     .catch(error => {
       this.toast.create({
         message: "Couldn't save your workout...",
+        position: "bottom",
         duration: 3000
       }).present();
-      console.log("We didn't successfully save the workout!");
     });
   }
 }

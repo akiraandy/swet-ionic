@@ -1,16 +1,20 @@
 <ion-content padding id="workout-create">
-  <form [formGroup]="workout_form">
 
-    <ion-item>
-        <ion-label floating>Title</ion-label>
-        <ion-input type="text" formControlName="title" [(ngModel)]="workout.title"></ion-input>
-    </ion-item>
-  </form>
+  <ion-list>
+    <ion-item><ion-title text-center>Create Workout</ion-title></ion-item>
+  
+    <form [formGroup]="workout_form">
+      <ion-item>
+          <ion-label floating>Title</ion-label>
+          <ion-input type="text" formControlName="title" [(ngModel)]="workout.title"></ion-input>
+      </ion-item>
+    </form>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
-      <ion-col><button ion-button full round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button></ion-col>
-    </ion-row>
-  </ion-grid>
+    <ion-grid>
+      <ion-row>
+        <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
+        <ion-col><button ion-button full round type="submit" [disabled]="!workout_form.valid" (click)="submit(workout)">Submit</button></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
 </ion-content>

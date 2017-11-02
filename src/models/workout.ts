@@ -1,11 +1,6 @@
-export class Workout {
-
-
-    constructor(public title: string, public date: Date, public exercises: any[]){
-        this.title = title;
-        this.date = date;
-        this.exercises = exercises;
-    }
-
-
+export interface Workout {
+        id : string;
+        title : string;
+        date : string;
+        exercises : Array<any>;
 }
