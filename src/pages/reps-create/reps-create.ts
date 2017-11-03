@@ -147,17 +147,17 @@ export class RepsCreatePage {
   }
 
   getSets() {
-    let loader = this.loading.create({
-      content: "Fetching data..."
-    });
+    // let loader = this.loading.create({
+    //   content: "Fetching data..."
+    // });
 
-    loader.present().then(() => {
-      this._DB.getSets(this.navParams.get("exercise_id"))
-      .subscribe(res => {
-        this.sets.push(res);
-      });
-    });
-    loader.dismiss();
+    // loader.present().then(() => {
+    //   this._DB.getSets(this.navParams.get("exercise_id"))
+    //   .subscribe(res => {
+    //     this.sets.push(res);
+    //   });
+    // });
+    // loader.dismiss();
   }
 
   close() {

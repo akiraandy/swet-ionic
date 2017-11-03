@@ -26,9 +26,9 @@ export class ExerciseShowPage {
     this.exercise.sets = [];
   }
 
-  ionViewDidLoad() {
-    this.getSetsWithReps();
-  }
+  // ionViewDidLoad() {
+  //   this.getSetsWithReps();
+  // }
 
   leave(){
     this.navCtrl.pop();
@@ -38,14 +38,14 @@ export class ExerciseShowPage {
     this.exercise.sets = [];
   }
   
-  getSetsWithReps(){
-    this.clearSets();
-    this._DB.getSetsWithReps(this.exercise.id)
-    .subscribe(set => {
-      this.exercise.sets.push(set);
-      console.log(this.exercise.sets);
-    });
-  }
+  // getSetsWithReps(){
+  //   this.clearSets();
+  //   this._DB.getSetsWithReps(this.exercise.id)
+  //   .subscribe(set => {
+  //     this.exercise.sets.push(set);
+  //     console.log(this.exercise.sets);
+  //   });
+  // }
 
   navigateToExerciseEditPage(){
     let modal = this.modalCtrl.create("ExerciseEditPage", {exercise_id: this.exercise.id, exercise_name: this.exercise.name},{enableBackdropDismiss: true});
@@ -67,7 +67,7 @@ export class ExerciseShowPage {
     .then(() => {
       this._DB.deleteSet(set.id)
       .then(() => {
-        this.getSetsWithReps();
+        // this.getSetsWithReps();
       });
     })
   }

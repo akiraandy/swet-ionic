@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{workout.title}} </ion-title>
+    <ion-title>{{(workout | async)?.title}} </ion-title>
     <ion-buttons end>
         <button ion-button icon-only clear color="danger" (click)="showDeletePrompt(); printId()"><ion-icon name="trash" is-active="false"></ion-icon></button>
     </ion-buttons>
@@ -9,15 +9,15 @@
 </ion-header>
 <ion-content padding id="workout-show" [class.blur]="applyBlur">
   <ion-list>
-    <ion-list-header>{{ workout.date }} {{ from_now }}</ion-list-header>
+    <ion-list-header>{{ (workout | async)?.created_at }}</ion-list-header>
       <ion-item>
-        Number of exercises: {{ exercises.length }}
+        Number of exercises: {{ (workout | async)?.exercises.length }}
         <button ion-button item-end color="approve" (click)="goToExerciseCreatePage()">
           <ion-icon name="add"></ion-icon>
         </button>
       </ion-item>
-      <ion-item-sliding *ngFor="let exercise of exercises">
-        <ion-item item-start >{{exercise.name}} <ion-icon name="list">{{exercise.setCount}}</ion-icon> <ion-icon name="repeat">{{exercise.repCount}}</ion-icon></ion-item>
+      <ion-item-sliding *ngFor="let exercise of (workout | async)?.exercises">
+        <ion-item item-start >{{ exercise.name }} <ion-icon name="list"></ion-icon>{{ exercise.sets?.length }}</ion-item>
         <ion-item-options side="right">
           <button ion-button icon-start (click)="navigateToExercise(exercise)">
             <ion-icon name="search"></ion-icon>
