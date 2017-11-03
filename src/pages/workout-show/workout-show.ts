@@ -32,6 +32,11 @@ export class WorkoutShowPage {
 
   }
 
+  printId(){
+    console.log(this.user.id);
+    
+  }
+
   ionViewWillEnter(){
     this.getWorkout();
   }
@@ -120,9 +125,9 @@ export class WorkoutShowPage {
     });
     loader.present()
     .then(() => {
-      this._DB.deleteAllDependentOnWorkout(this.workout_id)
+      this._DB.deleteAllDependentOnWorkout(this.workout.id)
       .then(() => {
-        this._DB.deleteWorkout(this.workout_id)
+        this._DB.deleteWorkout(this.workout.id)
         .then(() => {
           loader.dismiss();
           this.navCtrl.pop();
