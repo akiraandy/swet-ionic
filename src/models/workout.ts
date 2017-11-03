@@ -1,4 +1,5 @@
 import { Exercise } from './exercise';
+import moment from 'moment';
 
 export class Workout {
     id: string;
@@ -19,5 +20,15 @@ export class Workout {
     addExercise(exercise: Exercise) {
         this.exercises.push(exercise);
     }
+
+    date() :string{
+        return moment(this.created_at).format('dddd MMMM Do YYYY')
+    }
+
+    fromNow() :string{
+        return moment(this.created_at).fromNow();
+    }
+
+
 
 }

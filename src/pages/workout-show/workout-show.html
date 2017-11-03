@@ -9,7 +9,7 @@
 </ion-header>
 <ion-content padding id="workout-show" [class.blur]="applyBlur">
   <ion-list>
-    <ion-list-header>{{ (workout | async)?.created_at }}</ion-list-header>
+    <ion-list-header>{{ (workout | async)?.date() }} {{ (workout | async)?.fromNow()}}</ion-list-header>
       <ion-item>
         Number of exercises: {{ (workout | async)?.exercises.length }}
         <button ion-button item-end color="approve" (click)="goToExerciseCreatePage()">

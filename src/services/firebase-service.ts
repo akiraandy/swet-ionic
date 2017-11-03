@@ -101,6 +101,40 @@ export class FirebaseService {
     //     return workoutObj;
     // }
 
+    getFullExercise(exercise_id: string) :Promise<Exercise> {
+        return new Promise<Exercise>((resolve, reject) => {
+            this.getExercise(exercise_id)
+            .then(exercise => {
+                this.getSets(exercise.id)
+                .then(sets => {
+                    exercise.sets = sets;
+                    sets.forEach(set => {
+                        this.getReps(set.id)
+                        .then(reps => {
+                            set.reps = reps;
+                        });
+                    });
+                    resolve(exercise);
+                });
+            });
+        });
+    }
+
+    getExercise(exercise_id: string) :Promise<Exercise> {
+        return new Promise<Exercise>((resolve, reject) => {
+            this._DB.collection("exercises")
+            .doc(exercise_id)
+            .get()
+            .then(docSnapShot => {
+                let exercise = new Exercise(docSnapShot);
+                resolve(exercise);
+            })
+            .catch(error => {
+                console.log("Error occurred: ", error);
+            });
+        });
+    }
+
     getWorkouts(user_id) {
         return new Promise<Workout[]>((resolve, reject) => {
             this._DB
