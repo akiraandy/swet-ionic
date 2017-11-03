@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, LoadingController, ModalController
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 import { Workout } from '../../models/workout'
+import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
 
 @IonicPage()
@@ -11,11 +12,9 @@ import moment from 'moment';
   templateUrl: 'workout-show.html',
 })
 export class WorkoutShowPage {
-  workout = {} as Workout;
+  workout: Observable<Workout>
   exercises = [];
   applyBlur = false;
-  workout_id : string;
-  workout_title :string
   from_now : string;
 
   constructor(public navCtrl: NavController, 
@@ -25,11 +24,7 @@ export class WorkoutShowPage {
               private modalCtrl: ModalController,
               private user: UserService,
               public alertCtrl: AlertController){
-                this.workout.title = "";
-                this.workout.date = "";
-                this.workout.id = this.navParams.get("id");
-                this.from_now = "";
-
+                
   }
 
   printId(){

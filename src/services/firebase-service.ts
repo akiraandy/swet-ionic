@@ -6,24 +6,39 @@ import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
 import { Workout } from '../models/workout';
 
+
 @Injectable()
 export class FirebaseService {
 
     private _DB : any;
     timestamp : any;
     unix_timestamp : any;
-
     constructor() { 
         this._DB = firebase.firestore();
         this.timestamp = firebase.firestore.FieldValue.serverTimestamp();
         this.unix_timestamp = parseInt(moment(this.timestamp).format("X"));
     }
 
+    getWorkout(workout_id: string) :Promise<Workout> {
+        return new Promise((resolve, reject) => {
+            this._DB
+            .collection("workouts").doc(workout_id)
+            .get()
+            .then(doc => {
+                let workout = new Workout(doc);
+                resolve(workout);
+            }).catch(error => {
+                reject(error);
+                console.log("Error occurred while fetching workout: ", error);
+            });
+        });
+    }
+
     noWorkoutExistsForToday(user_id) {
         let date = new Date;
         let startOfDay = parseInt(moment(date.toISOString()).startOf('day').format("X"));
         let endOfDay = parseInt(moment(date.toISOString()).endOf('day').format("X"));
-        return new Observable(observer => {
+        return new Promise((resolve, reject) => {
             this._DB.collection("workouts")
             .where("user_id", "==", user_id)
             .where("created_at_unix", ">=", startOfDay)
@@ -31,74 +46,73 @@ export class FirebaseService {
             .get()
             .then(querySnapshot => {
                 if(querySnapshot.empty){
-                    observer.next(true);
-                    observer.complete();
+                    resolve(true);
                 } else {
-                    observer.next(false);
-                    observer.complete();
+                    resolve(false);
                 }
             })
             .catch(error => {
                 console.log("Error occurred", error);
-                observer.error(error);
-            });
-        });
-    }
-
-    getWorkout(workout_id) {
-        return new Observable((observer) => {
-            this._DB
-            .collection("workouts").doc(workout_id)
-            .get()
-            .then(doc => {
-                if (doc.exists){
-                    let workout = {};
-                    workout["id"] = doc.id;
-                    workout["title"] = doc.data().title
-                    workout["date"] = doc.data().created_at
-                    observer.next(workout);
-                } else {
-                    console.log("Doc does not exist!");
-                }
-                observer.complete();
-            }).catch(error => {
-                observer.error(error);
-                console.log("Error occurred while fetching workout: ", error);
-            });
-        })
-    }
-
-    getWorkoutWithExercises(workout_id){
-        let exercises = [];
-        let workoutObj : Workout;
-        this.getWorkout(workout_id)
-        .subscribe(workout => {
-            workoutObj = <Workout>workout;
-            this.getExercisesFromWorkout(workout_id)
-            .subscribe(exercise => {
-                workoutObj.exercises.push(exercise);
             })
+            .catch(error => {
+                console.log("Error occurred", error);
+                reject(error);
+            });
         });
-        return workoutObj;
     }
+
+    // getWorkout(workout_id) {
+    //     return new Observable((observer) => {
+    //         this._DB
+    //         .collection("workouts").doc(workout_id)
+    //         .get()
+    //         .then(doc => {
+    //             if (doc.exists){
+    //                 let workout = {};
+    //                 workout["id"] = doc.id;
+    //                 workout["title"] = doc.data().title
+    //                 workout["date"] = doc.data().created_at
+    //                 observer.next(workout);
+    //             } else {
+    //                 console.log("Doc does not exist!");
+    //             }
+    //             observer.complete();
+    //         }).catch(error => {
+    //             observer.error(error);
+    //             console.log("Error occurred while fetching workout: ", error);
+    //         });
+    //     })
+    // }
+
+    // getWorkoutWithExercises(workout_id){
+    //     let exercises = [];
+    //     let workoutObj : Workout;
+    //     this.getWorkout(workout_id)
+    //     .subscribe(workout => {
+    //         workoutObj = <Workout>workout;
+    //         this.getExercisesFromWorkout(workout_id)
+    //         .subscribe(exercise => {
+    //             workoutObj.exercises.push(exercise);
+    //         })
+    //     });
+    //     return workoutObj;
+    // }
 
     getWorkouts(user_id) {
-        return new Observable((observer) => {
+        return new Promise<Workout[]>((resolve, reject) => {
             this._DB
             .collection("workouts").where("user_id", "==", user_id)
             .orderBy("created_at")
             .get()
             .then(querySnapshot => {
-                querySnapshot.forEach(workoutData => {
-                    let workout = {};
-                    workout["id"] = workoutData.id;
-                    workout["title"] = workoutData.data().title;
-                    workout["date"] = workoutData.data().created_at;
-                    observer.next(workout);
+                let workoutArr : Array<Workout> = [];
+                querySnapshot.forEach(workoutRef => {
+                    let workout = new Workout(workoutRef);
+                    workoutArr.push(workout);
                 });
-                observer.complete();
+                resolve(workoutArr);
             }).catch(error => {
-                observer.error(error);
+                reject(error);
                 console.log("Error getting workouts!", error);
             });
         });
