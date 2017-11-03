@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, ViewController, ToastController } from 'ionic-angular';
 import { Workout } from '../../models/workout';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
+import moment from 'moment';
+
 
 @IonicPage()
 @Component({
@@ -13,9 +15,8 @@ import { UserService } from '../../services/user-service';
 export class WorkoutCreatePage {
 
   private workout_form : FormGroup;
-  workout : Workout;
+  workout = {} as Workout;
   trans = true;
-
   constructor(private user: UserService, 
     public viewCtrl: ViewController, 
     private form: FormBuilder, 
@@ -23,10 +24,13 @@ export class WorkoutCreatePage {
     public toast: ToastController) 
     {
     this.workout_form = this.form.group({
-      title: ["", Validators.compose([Validators.maxLength(30), Validators.required])],
+      title: ["", [Validators.compose([Validators.maxLength(30), Validators.required])]]
     });
   }
 
+  ionViewDidEnter(){
+  }
+  
   close(workout?) {
     this.viewCtrl.dismiss(workout);
   }

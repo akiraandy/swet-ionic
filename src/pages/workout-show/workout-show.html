@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>{{workout.title}} </ion-title>
     <ion-buttons end>
-        <button ion-button icon-only clear color="danger" (click)="showDeletePrompt()"><ion-icon name="trash" is-active="false"></ion-icon></button>
+        <button ion-button icon-only clear color="danger" (click)="showDeletePrompt(); printId()"><ion-icon name="trash" is-active="false"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
   

@@ -12,6 +12,7 @@ import { UserService } from '../../services/user-service';
 
 export class WorkoutPage {
   workouts = [];
+  
   fabOpened : boolean = false;
   constructor(public modalCtrl: ModalController, 
     public navCtrl: NavController, 

@@ -10,9 +10,39 @@ import { Workout } from '../models/workout';
 export class FirebaseService {
 
     private _DB : any;
+    timestamp : any;
+    unix_timestamp : any;
 
     constructor() { 
         this._DB = firebase.firestore();
+        this.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        this.unix_timestamp = parseInt(moment(this.timestamp).format("X"));
+    }
+
+    noWorkoutExistsForToday(user_id) {
+        let date = new Date;
+        let startOfDay = parseInt(moment(date.toISOString()).startOf('day').format("X"));
+        let endOfDay = parseInt(moment(date.toISOString()).endOf('day').format("X"));
+        return new Observable(observer => {
+            this._DB.collection("workouts")
+            .where("user_id", "==", user_id)
+            .where("created_at_unix", ">=", startOfDay)
+            .where("created_at_unix", "<=", endOfDay)
+            .get()
+            .then(querySnapshot => {
+                if(querySnapshot.empty){
+                    observer.next(true);
+                    observer.complete();
+                } else {
+                    observer.next(false);
+                    observer.complete();
+                }
+            })
+            .catch(error => {
+                console.log("Error occurred", error);
+                observer.error(error);
+            });
+        });
     }
 
     getWorkout(workout_id) {
@@ -120,14 +150,14 @@ export class FirebaseService {
     }
 
     addUser(user) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        
         this._DB.collection("users").doc(user.id).set({
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
             DoB: user.dateOfBirth,
-            created_at: timestamp,
-            updated_at: timestamp
+            created_at: this.timestamp,
+            updated_at: this.timestamp
         }).then(res => {
             console.log("User created with ID:", res);
         }).catch(error => {
@@ -137,12 +167,12 @@ export class FirebaseService {
 
     addWorkout(workout, user_id) {
         return new Promise ((resolve, reject) => {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
             this._DB.collection("workouts").add({
                 user_id: user_id,
                 title: workout.title,
-                created_at: timestamp,
-                updated_at: timestamp
+                created_at_unix: this.unix_timestamp,
+                created_at: this.timestamp,
+                updated_at: this.timestamp
             }).then(res => {
                 console.log("Workout successfully created!", res);
                 resolve(res);
@@ -155,13 +185,13 @@ export class FirebaseService {
 
     addExercise(exercise, workout_id, user_id) {
         return new Observable ((observer) => {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            
             this._DB.collection("exercises").add({
                 user_id: user_id,
                 workout_id: workout_id,
                 name: exercise.name,
-                created_at: timestamp,
-                updated_at: timestamp
+                created_at: this.timestamp,
+                updated_at: this.timestamp
             }).then(res => {
                 console.log("Exercise successfully created!", res);
                 observer.next(res);
@@ -175,14 +205,14 @@ export class FirebaseService {
 
     addSet(user_id, workout_id, exercise_id, weight){
         return new Observable ((observer) => {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            
             this._DB.collection("sets").add({
                 weight: weight,
                 user_id: user_id,
                 workout_id: workout_id,
                 exercise_id: exercise_id,
-                created_at: timestamp,
-                updated_at: timestamp
+                created_at: this.timestamp,
+                updated_at: this.timestamp
             }).then(res => {
                 console.log("Set successfully created!", res);
                 observer.next(res.id);
@@ -227,15 +257,15 @@ export class FirebaseService {
 
     addRepToSet(user_id, workout_id, exercise_id, set_id, weight) {
         return new Promise((resolve, reject) => {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            
             this._DB.collection("reps").add({
                 user_id: user_id,
                 workout_id: workout_id,
                 exercise_id: exercise_id,
                 set_id: set_id,
                 weight: weight,
-                created_at: timestamp,
-                updated_at: timestamp
+                created_at: this.timestamp,
+                updated_at: this.timestamp
             }).then(res => {
                 console.log('Successfully added rep', res);  
                 resolve(res);
