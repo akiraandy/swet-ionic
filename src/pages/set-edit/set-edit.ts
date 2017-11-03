@@ -36,10 +36,6 @@ export class SetEditPage {
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SetEditPage');
-  }
-
   close(){
     this.viewCtrl.dismiss();
   }
