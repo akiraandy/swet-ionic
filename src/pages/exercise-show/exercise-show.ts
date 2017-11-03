@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, AlertController } from 'ionic-angular';
 import { Exercise } from '../../models/exercise';
 import { FirebaseService } from '../../services/firebase-service';
 
@@ -20,7 +20,8 @@ export class ExerciseShowPage {
     public navParams: NavParams, 
     private _DB: FirebaseService,
     private modalCtrl: ModalController,
-    private loading: LoadingController) {
+    private loading: LoadingController,
+    private alertCtrl: AlertController) {
       this.exercise_id = this.navParams.get("exercise_id");
       
   }
@@ -48,6 +49,9 @@ export class ExerciseShowPage {
   navigateToSetEditPage(set){
     this.exercise.then(exercise => {
       let modal = this.modalCtrl.create("SetEditPage", {set_id: set.id, reps: set.reps, weight: set.weight, workout_id: exercise.workout_id, exercise_id: exercise.id});
+      modal.onDidDismiss(() =>{
+        this.getExercise();
+      });
       modal.present();
     });
   }
@@ -77,6 +81,28 @@ export class ExerciseShowPage {
         });
       });
     });
+  }
+
+  showDeletePrompt() {
+    let prompt = this.alertCtrl.create({
+      title: "Delete exercise",
+      message: "Are you sure you want to delete this exercise?",
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log("Cancel clicked");
+          }
+        },
+        {
+          text: 'Delete',
+          handler: data => {
+            this.deleteExercise();
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
 }

@@ -41,7 +41,6 @@ export class WorkoutShowPage {
       this.workout = this._DB.getFullWorkout(this.workout_id)
       .then(workout => {
         loader.dismiss();
-        console.log(workout);
         return workout;
       });
     });

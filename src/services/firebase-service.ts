@@ -64,43 +64,6 @@ export class FirebaseService {
         });
     }
 
-    // getWorkout(workout_id) {
-    //     return new Observable((observer) => {
-    //         this._DB
-    //         .collection("workouts").doc(workout_id)
-    //         .get()
-    //         .then(doc => {
-    //             if (doc.exists){
-    //                 let workout = {};
-    //                 workout["id"] = doc.id;
-    //                 workout["title"] = doc.data().title
-    //                 workout["date"] = doc.data().created_at
-    //                 observer.next(workout);
-    //             } else {
-    //                 console.log("Doc does not exist!");
-    //             }
-    //             observer.complete();
-    //         }).catch(error => {
-    //             observer.error(error);
-    //             console.log("Error occurred while fetching workout: ", error);
-    //         });
-    //     })
-    // }
-
-    // getWorkoutWithExercises(workout_id){
-    //     let exercises = [];
-    //     let workoutObj : Workout;
-    //     this.getWorkout(workout_id)
-    //     .subscribe(workout => {
-    //         workoutObj = <Workout>workout;
-    //         this.getExercisesFromWorkout(workout_id)
-    //         .subscribe(exercise => {
-    //             workoutObj.exercises.push(exercise);
-    //         })
-    //     });
-    //     return workoutObj;
-    // }
-
     getFullExercise(exercise_id: string) :Promise<Exercise> {
         return new Promise<Exercise>((resolve, reject) => {
             this.getExercise(exercise_id)
@@ -162,6 +125,9 @@ export class FirebaseService {
                 this.getExercises(workout_id)
                 .then(exerciseArr => {
                     workout.exercises = exerciseArr;
+                    if (workout.exercises.length == 0) {
+                        resolve(workout);
+                    }
                     workout.exercises.forEach(exercise => {
                         this.getSets(exercise.id)
                         .then(setArr => {
@@ -312,6 +278,7 @@ export class FirebaseService {
                     let set = new Set(setData);
                     setArr.push(set);
                 });
+                
                 resolve(setArr);
             }).catch(error => {
                 reject(error);
@@ -374,30 +341,6 @@ export class FirebaseService {
         });
     }
 
-    // getSetsWithReps(exercise_id){
-    //     return new Observable ((observer) => {
-    //         this._DB.collection("sets")
-    //         .where("exercise_id", "==", exercise_id)
-    //         .orderBy("created_at")
-    //         .get()
-    //         .then((querySnapshot) => {
-    //             querySnapshot.docs.forEach(setData => {
-    //                 let set = {id: "", reps: [], weight: ""};
-    //                 set["id"] = setData.id;
-    //                 set["weight"] = setData.data().weight;
-    //                 set["reps"] = [];
-    //                 this.getReps(setData).subscribe(rep => {
-    //                     set.reps.push(rep);
-    //                     });
-    //                 observer.next(set);
-    //                 });
-    //         }).catch(error => {
-    //             observer.error(error);
-    //             console.log(error);
-    //         });
-    //     }); 
-    // }
-
     getRepCountForExercise(exercise_id) {
         return new Observable ((observer) => {
             this._DB.collection("reps")
@@ -427,28 +370,33 @@ export class FirebaseService {
     }
 
     updateSetWithReps(set_id, rep_count, newWeight){
-        this._DB.collection("sets")
-        .doc(set_id)
-        .update({
-            weight: newWeight
-        })
-        .then(() => {
-            this._DB.collection("reps")
-            .where("set_id", "==", set_id)
-            .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach(rep => {
-                    rep.ref.update({
-                        weight: newWeight
-                    });
-                    console.log("Successfully updated!");
-                });
+        return new Promise((resolve, reject) => {
+            this._DB.collection("sets")
+            .doc(set_id)
+            .update({
+                weight: newWeight
             })
-            .catch(error => {
-                console.log("Something went wrong!");
+            .then(() => {
+                this._DB.collection("reps")
+                .where("set_id", "==", set_id)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach(rep => {
+                        rep.ref.update({
+                            weight: newWeight
+                        });
+                        resolve();
+                        console.log("Successfully updated!");
+                    });
+                })
+                .catch(error => {
+                    reject();
+                    console.log("Something went wrong!");
+                });
+            }).catch(error => {
+                reject();
+                console.log("Error updating set", error);
             });
-        }).catch(error => {
-            console.log("Error updating set", error);
         });
     }
 
