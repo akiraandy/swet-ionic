@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>{{(workout | async)?.title}} </ion-title>
     <ion-buttons end>
-        <button ion-button icon-only clear color="danger" (click)="showDeletePrompt(); printId()"><ion-icon name="trash" is-active="false"></ion-icon></button>
+        <button ion-button icon-only clear (click)="showDeletePrompt()"><ion-icon name="backspace" is-active="false"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
   

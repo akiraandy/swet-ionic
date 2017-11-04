@@ -22,7 +22,11 @@ export class WorkoutPage {
     public user: UserService,
     public loading: LoadingController,
     public toast: ToastController) {
-      this.workouts = this.getWorkouts();
+
+  }
+
+  ionViewWillEnter(){
+    this.workouts = this.getWorkouts();
   }
 
   addWorkout() {
