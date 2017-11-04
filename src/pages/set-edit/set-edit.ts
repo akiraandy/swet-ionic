@@ -36,10 +36,6 @@ export class SetEditPage {
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SetEditPage');
-  }
-
   close(){
     this.viewCtrl.dismiss();
   }
@@ -47,19 +43,31 @@ export class SetEditPage {
   submit(){
     let repCount = this.set_form.value.repCount;
     let weight = this.set_form.value.weight;
-    this.updateSet(repCount, weight);
+    this.updateSet(repCount, weight)
+    .then(() => {
+      this.close();
+    });
   }
 
   updateSet(repCount, weight){
+    return new Promise((resolve, reject) => {
+      let args = this.createArgs(weight);
+      this._DB.adjustRepCount(this.set.id, this.set_form.value.repCount, args)
+      .then(() => {
+        this._DB.updateSetWithReps(this.set.id, repCount, weight)
+        .then(() => {
+          resolve();
+        });
+      });
+    });
+  }
+
+  createArgs(weight) {
     let args = {};
     args["user_id"] = this.user.id;
     args["workout_id"] = this.workout_id;
     args["exercise_id"] = this.exercise_id;
     args["weight"] = weight;
-    this._DB.adjustRepCount(this.set.id, this.set_form.value.repCount, args)
-    .then(() => {
-      this._DB.updateSetWithReps(this.set.id, repCount, weight);
-    });
-    
+    return args;
   }
 }

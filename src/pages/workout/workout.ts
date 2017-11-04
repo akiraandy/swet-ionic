@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController, FabContainer } from 'ionic-angular';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
-
+import { Observable } from 'rxjs/Observable';
+import { Workout } from '../../models/workout';
 
 @IonicPage()
 @Component({
@@ -11,24 +12,29 @@ import { UserService } from '../../services/user-service';
 })
 
 export class WorkoutPage {
-  workouts = [];
-  
-  fabOpened : boolean = false;
-  constructor(public modalCtrl: ModalController, 
-    public navCtrl: NavController, 
+  workouts : Promise<Workout[]>;
+
+  fabOpened: boolean = false;
+  constructor(public modalCtrl: ModalController,
+    public navCtrl: NavController,
     public navParams: NavParams,
     private _DB: FirebaseService,
     public user: UserService,
     public loading: LoadingController,
     public toast: ToastController) {
+
+  }
+
+  ionViewWillEnter(){
+    this.workouts = this.getWorkouts();
   }
 
   addWorkout() {
-    let modal = this.modalCtrl.create("WorkoutCreatePage", {enableBackdropDismiss: true});
+    let modal = this.modalCtrl.create("WorkoutCreatePage", { enableBackdropDismiss: true });
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
-        this.getWorkouts();
+        this.workouts = this.getWorkouts();
         this.toast.create({
           message: "Workout created!",
           position: "middle",
@@ -39,54 +45,36 @@ export class WorkoutPage {
     modal.present();
   }
 
-  ionViewWillEnter() {
-    this.getWorkouts();
+  refresh(refresher) {
+    this.workouts = this.getWorkouts();
+    refresher.complete();
   }
 
-
-  refresh(refresher){
-      this.workouts = [];
-      this.getWorkouts();
-      refresher.complete();
+  getWorkouts() {
+    return this._DB.getWorkouts(this.user.id);
   }
 
-  getWorkouts(){
-    this.workouts = [];
-    let loader = this.loading.create({
-      content: "Getting workouts..."
-    });
-
-    loader.present().then(() => {
-      this._DB.getWorkouts(this.user.id)
-      .subscribe(res => {
-        this.workouts.push(res)
-      });
-    });
-    loader.dismiss();
-    
-  }
-
-  goToWorkoutShowPage(workout){
-    if (!this.fabOpened){
+  goToWorkoutShowPage(workout) {
+    if (!this.fabOpened) {
       this.navCtrl.push("WorkoutShowPage", {
         id: workout.id
       });
     }
   }
 
-  resetBlur(){
+  resetBlur() {
     this.fabOpened = false;
   }
 
-  addBlur(){
+  addBlur() {
     this.fabOpened = true;
   }
 
-  fabContainerClicked(fab: FabContainer){
+  fabContainerClicked(fab: FabContainer) {
     this.fabOpened = !fab._listsActive;
   }
 
-  closeFab(fab: FabContainer){
+  closeFab(fab: FabContainer) {
     fab.close();
   }
 }

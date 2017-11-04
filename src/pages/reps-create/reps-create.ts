@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase-service';
-import { Set } from '../../models/set';
 import { UserService } from '../../services/user-service';
 
 @IonicPage()
@@ -12,8 +11,6 @@ import { UserService } from '../../services/user-service';
 })
 export class RepsCreatePage {
 
-  set = {} as Set;
-  sets = [];
   uniform: boolean;
   exercise_form: FormGroup;
   workout_id: string;
@@ -142,24 +139,6 @@ export class RepsCreatePage {
     });
   }
 
-  ionViewDidLoad() {
-    this.getSets();
-  }
-
-  getSets() {
-    let loader = this.loading.create({
-      content: "Fetching data..."
-    });
-
-    loader.present().then(() => {
-      this._DB.getSets(this.navParams.get("exercise_id"))
-      .subscribe(res => {
-        this.sets.push(res);
-      });
-    });
-    loader.dismiss();
-  }
-
   close() {
     this.navCtrl.pop();
   }
@@ -186,7 +165,8 @@ export class RepsCreatePage {
   }
 
   submit() {
-    if (this.exercise_form.value.sets[0].setCount) {
+    let condensed = this.exercise_form.value.sets[0].setCount;
+    if (condensed) {
       let set = this.condensedSet(this.exercise_form.value.sets[0]);
       for (let i = 0; i < set.count; i++) {
         this.createSetWithReps(set.reps, set.weight);

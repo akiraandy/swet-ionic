@@ -25,5 +25,9 @@ export class HomePage {
   }
 
   getNav(){
+    this._DB.getWorkout("91c9531ZeVbFJ65iSMcN")
+    .then(response => {
+      console.log(response);
+    })
   }
 }

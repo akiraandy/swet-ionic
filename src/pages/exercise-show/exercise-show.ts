@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, AlertController } from 'ionic-angular';
 import { Exercise } from '../../models/exercise';
 import { FirebaseService } from '../../services/firebase-service';
 
@@ -11,55 +11,49 @@ import { FirebaseService } from '../../services/firebase-service';
 })
 export class ExerciseShowPage {
 
-  exercise = {} as Exercise;
+  exercise : Promise<Exercise>;
   edit = false;
   workout_id : string;
+  exercise_id: string;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     private _DB: FirebaseService,
     private modalCtrl: ModalController,
-    private loading: LoadingController) {
-    this.exercise.name = this.navParams.get("exercise_name");
-    this.exercise.id = this.navParams.get("exercise_id");
-    this.workout_id = this.navParams.get("workout_id");
-    this.exercise.sets = [];
+    private loading: LoadingController,
+    private alertCtrl: AlertController) {
+      this.exercise_id = this.navParams.get("exercise_id");
+      
   }
 
-  ionViewDidLoad() {
-    this.getSetsWithReps();
+  ionViewWillEnter() {
+    this.getExercise();
   }
 
   leave(){
     this.navCtrl.pop();
   }
-
-  clearSets() {
-    this.exercise.sets = [];
-  }
   
-  getSetsWithReps(){
-    this.clearSets();
-    this._DB.getSetsWithReps(this.exercise.id)
-    .subscribe(set => {
-      this.exercise.sets.push(set);
-      console.log(this.exercise.sets);
-    });
+  getExercise(){
+    this.exercise = this._DB.getFullExercise(this.exercise_id);
   }
 
   navigateToExerciseEditPage(){
-    let modal = this.modalCtrl.create("ExerciseEditPage", {exercise_id: this.exercise.id, exercise_name: this.exercise.name},{enableBackdropDismiss: true});
-    modal.onWillDismiss(nameChanged => {
-      if (nameChanged) {
-        this.exercise.name = nameChanged;
-      }
-    });
-    modal.present();
+    this.exercise.then(exercise => {
+      let modal = this.modalCtrl.create("ExerciseEditPage", {exercise_id: exercise.id, exercise_name: exercise.name},{enableBackdropDismiss: true});
+      modal.present();
+    })
+
   }
 
   navigateToSetEditPage(set){
-    let modal = this.modalCtrl.create("SetEditPage", {set_id: set.id, reps: set.reps, weight: set.weight, workout_id: this.workout_id, exercise_id: this.exercise.id});
-    modal.present();
+    this.exercise.then(exercise => {
+      let modal = this.modalCtrl.create("SetEditPage", {set_id: set.id, reps: set.reps, weight: set.weight, workout_id: exercise.workout_id, exercise_id: exercise.id});
+      modal.onDidDismiss(() =>{
+        this.getExercise();
+      });
+      modal.present();
+    });
   }
 
   deleteSet(set){
@@ -67,7 +61,7 @@ export class ExerciseShowPage {
     .then(() => {
       this._DB.deleteSet(set.id)
       .then(() => {
-        this.getSetsWithReps();
+        this.exercise = this._DB.getFullExercise(this.exercise_id);
       });
     })
   }
@@ -78,15 +72,37 @@ export class ExerciseShowPage {
     });
     loader.present()
     .then(() => {
-      this._DB.deleteAllDependentOnExercise(this.exercise.id)
+      this._DB.deleteAllDependentOnExercise(this.exercise_id)
       .then(() => {
-        this._DB.deleteExercise(this.exercise.id)
+        this._DB.deleteExercise(this.exercise_id)
         .then(() => {
           loader.dismiss();
           this.leave();
         });
       });
     });
+  }
+
+  showDeletePrompt() {
+    let prompt = this.alertCtrl.create({
+      title: "Delete exercise",
+      message: "Are you sure you want to delete this exercise?",
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log("Cancel clicked");
+          }
+        },
+        {
+          text: 'Delete',
+          handler: data => {
+            this.deleteExercise();
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
 }

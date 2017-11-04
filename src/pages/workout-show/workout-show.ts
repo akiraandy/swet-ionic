@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, LoadingController, ModalController
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 import { Workout } from '../../models/workout'
+import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
 
 @IonicPage()
@@ -11,12 +12,11 @@ import moment from 'moment';
   templateUrl: 'workout-show.html',
 })
 export class WorkoutShowPage {
-  workout = {} as Workout;
+  workout: Promise<Workout>
   exercises = [];
   applyBlur = false;
-  workout_id : string;
-  workout_title :string
   from_now : string;
+  workout_id: string;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -25,53 +25,25 @@ export class WorkoutShowPage {
               private modalCtrl: ModalController,
               private user: UserService,
               public alertCtrl: AlertController){
-                this.workout.title = "";
-                this.workout.date = "";
-                this.workout.id = this.navParams.get("id");
-                this.from_now = "";
-
-  }
-
-  printId(){
-    console.log(this.user.id);
-    
+                this.workout_id = this.navParams.get("id");
   }
 
   ionViewWillEnter(){
     this.getWorkout();
   }
 
-  clearData(){
-    this.workout = {id: "", title: "", date: "", exercises: []};
-    this.exercises = [];
-  }
-
-  formatDate(){
-    this.from_now = moment(this.workout.date).fromNow();
-    this.workout.date = moment(this.workout.date).format('MMMM Do YYYY');
-  }
-
   getWorkout(){
-    this.clearData();
     let loader = this.loading.create({
       content: "Fetching data..."
     });
 
     loader.present().then(() => {
-      this._DB.getWorkout(this.navParams.get("id"))
-      .subscribe(workout => {
-        this.workout = <Workout>workout;
-        this.formatDate();
-      });
-
-      this._DB.getExercisesFromWorkout(this.navParams.get("id"))
-      .subscribe(exercise => {
-        this.exercises.push(exercise);
-        this.getSetCount(exercise);
-        this.getRepCount(exercise);
+      this.workout = this._DB.getFullWorkout(this.workout_id)
+      .then(workout => {
+        loader.dismiss();
+        return workout;
       });
     });
-    loader.dismiss();
   }
 
   goToExerciseCreatePage(){
@@ -94,29 +66,12 @@ export class WorkoutShowPage {
     this.applyBlur = false;
   }
 
-  getSetCount(exercise){
-    let sets = [];
-    exercise["sets"] = [];
-    this._DB.getSets(exercise.id)
-    .subscribe(set => exercise.sets.push(set),
-    error => console.log(error),
-    () => exercise["setCount"] = exercise.sets.length);
-  }
-
-  getRepCount(exercise){
-    exercise["repCount"] = Number;
-    this._DB.getRepCountForExercise(exercise.id)
-    .subscribe(res => {
-      exercise["repCount"] = res;
-    });
-  }
-
   goToRepCreatePage(exercise) {
-    this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout.id});
+    this.navCtrl.push("RepsCreatePage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout_id});
   }
 
   navigateToExercise(exercise){
-    this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout.id});
+    this.navCtrl.push("ExerciseShowPage", {exercise_id: exercise.id, exercise_name: exercise.name, workout_id: this.workout_id});
   }
 
   deleteWorkout(){
@@ -125,9 +80,9 @@ export class WorkoutShowPage {
     });
     loader.present()
     .then(() => {
-      this._DB.deleteAllDependentOnWorkout(this.workout.id)
+      this._DB.deleteAllDependentOnWorkout(this.workout_id)
       .then(() => {
-        this._DB.deleteWorkout(this.workout.id)
+        this._DB.deleteWorkout(this.workout_id)
         .then(() => {
           loader.dismiss();
           this.navCtrl.pop();
