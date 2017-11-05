@@ -1,3 +1,11 @@
+<ion-header>
+  <ion-navbar>
+      <ion-title>
+          Workouts
+      </ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding id="workout" (click)="closeFab(fab1); resetBlur()">
   <ion-refresher (ionRefresh)="refresh($event)">
       <ion-refresher-content 
@@ -12,16 +20,16 @@
 
     <ion-list-header *ngFor="let workout of workoutList; let i = index" no-lines no-padding>
 
-      <button ion-item (click)="toggleSection(i)" detail-none [ngClass]="{'section-active': workout.open, 'section': !workout.open}">
+      <button ion-item (click)="toggleSection(i)" detail-none [ngClass]="{'section-active': workout.open, 'section': !workout.open, 'todays_workout': workout.todays}">
         <ion-icon item-right name="arrow-forward" *ngIf="!workout.open"></ion-icon>
         <ion-icon item-right name="arrow-down" *ngIf="workout.open"></ion-icon>
           {{ workout.title }}
       </button>
-      <div *ngIf="workout.open">
+      <div *ngIf="workout.open && workout.todays">
         <ion-grid>
           <ion-row>
             <ion-col>
-              <button ion-button block clear icon-only>
+              <button ion-button block clear icon-only (click)="navigateToExerciseCreatePage(workout)">
                 <ion-icon name="add-circle"></ion-icon>
               </button>
             </ion-col>
@@ -31,7 +39,7 @@
               </button>
             </ion-col>
             <ion-col>
-              <button ion-button block clear icon-only>
+              <button ion-button block clear icon-only (click)="showDeletePromptForWorkout(workout)">
                 <ion-icon name="close-circle"></ion-icon>
               </button>
             </ion-col>
@@ -50,18 +58,36 @@
             {{ exercise.name }}
           </button>
 
-          <ion-item *ngIf="!exercise.sets" ion-item detail-none class="child-item" text-wrap>
-            <h2>Create a set!</h2>
-            <p text-lowercase>create a set</p>
-            <button ion-button outline item-end>Add Set</button>
-          </ion-item>
+          
  
-          <ion-list *ngIf="exercise.sets && exercise.open">
-
+          <ion-list *ngIf="exercise.open">
+            <div *ngIf="workout.todays">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <button ion-button block outline (click)="goToRepCreatePage(workout, exercise)">
+                      Add Set
+                    </button>
+                  </ion-col>
+                  <ion-col>
+                    <button ion-button block outline (click)="navigateToExerciseEditPage(exercise)">
+                      Edit
+                    </button>
+                  </ion-col>
+                  <ion-col>
+                    <button ion-button block outline (click)="showDeletePromptForExercise(exercise)">
+                      Delete
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+            
             <ion-item *ngFor="let set of exercise.sets; let k = index" detail-none class="child-item" text-wrap>
               <h2>Set#{{ k + 1 }}</h2>
               <p text-lowercase>Weight: {{set.weight}}</p>
-              <button ion-button outline item-end >Rep count:{{ set.reps?.length }}</button>
+              <button ion-button outline item-end (click)="navigateToSetEditPage(workout, exercise, set)">Rep count:{{ set.rep_count }}</button>
+              <button ion-button clear icon-only item-end (click)="deleteSet(set)"><ion-icon name="trash"></ion-icon></button>
             </ion-item>
           </ion-list>
  
@@ -75,6 +101,6 @@
 
 <ion-footer>
     <ion-fab bottom right #fab1>
-        <button ion-fab (click)="addWorkout(); addBlur(); closeFab(fab1)" color="primary"><ion-icon name="add" color="light"></ion-icon></button>
+        <button ion-fab (click)="addWorkout(); addBlur(); closeFab(fab1)" color="light"><ion-icon name="add" color="primary"></ion-icon></button>
       </ion-fab>
 </ion-footer>

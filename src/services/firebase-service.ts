@@ -71,12 +71,6 @@ export class FirebaseService {
                 this.getSets(exercise.id)
                 .then(sets => {
                     exercise.sets = sets;
-                    sets.forEach(set => {
-                        this.getReps(set.id)
-                        .then(reps => {
-                            set.reps = reps;
-                        });
-                    });
                     resolve(exercise);
                 });
             });
@@ -127,17 +121,13 @@ export class FirebaseService {
                     this.getFullWorkout(workout.id)
                     .then(fullWorkout => {
                         result.push(fullWorkout);
-                        if (workouts.length == result.length){
-                            observer.complete();
-                        }
                     })
                     .catch(error => {
                         console.log("Error: ", error);
                     });
                 });
                 observer.next(result);
-
-                
+                observer.complete();
             })
             .catch(error => {
                 console.log("Error: ", error);
@@ -160,14 +150,8 @@ export class FirebaseService {
                         this.getSets(exercise.id)
                         .then(setArr => {
                             exercise.sets = setArr;
-                            exercise.sets.forEach(set => {
-                                this.getReps(set.id)
-                                .then(repArr => {
-                                    set.reps = repArr;
-                                });
-                            });
-                            resolve(workout);
                         });
+                        resolve(workout);
                     });
                 },
                 error => {
@@ -274,11 +258,11 @@ export class FirebaseService {
         });
     }
 
-    addSet(user_id, workout_id, exercise_id, weight){
-        return new Observable ((observer) => {
-            
+    addSet(user_id, workout_id, exercise_id, weight, rep_count){
+        return new Observable ((observer) => {  
             this._DB.collection("sets").add({
                 weight: weight,
+                rep_count: rep_count,
                 user_id: user_id,
                 workout_id: workout_id,
                 exercise_id: exercise_id,
@@ -299,6 +283,7 @@ export class FirebaseService {
         return new Promise<Set[]> ((resolve, reject) => {
             this._DB.collection("sets")
             .where("exercise_id", "==", exercise_id)
+            .orderBy("created_at")
             .get()
             .then((querySnapshot) => {
                 let setArr = <Set[]>[];
@@ -329,60 +314,6 @@ export class FirebaseService {
         });
     }
 
-    addRepToSet(user_id, workout_id, exercise_id, set_id, weight) {
-        return new Promise((resolve, reject) => {
-            
-            this._DB.collection("reps").add({
-                user_id: user_id,
-                workout_id: workout_id,
-                exercise_id: exercise_id,
-                set_id: set_id,
-                weight: weight,
-                created_at: this.timestamp,
-                updated_at: this.timestamp
-            }).then(res => {
-                console.log('Successfully added rep', res);  
-                resolve(res);
-            }).catch(error => {
-                console.log("Error when committing to database: ", error);
-                reject(error);
-            });
-        });
-    }
-
-    getReps(set_id: string) :Promise<Rep[]> {
-        return new Promise<Rep[]>((resolve, reject) => {
-            this._DB.collection("reps")
-            .where("set_id", "==", set_id)
-            .get()
-            .then(querySnapshot => {
-                let repArr = <Rep[]>[];
-                querySnapshot.forEach(repData => {
-                    let rep = new Rep(repData);
-                    repArr.push(rep);
-                });
-                resolve(repArr);
-            }).catch(error => {
-                console.log("error occurred", error);
-                reject(error);
-            });
-        });
-    }
-
-    getRepCountForExercise(exercise_id) {
-        return new Observable ((observer) => {
-            this._DB.collection("reps")
-            .where("exercise_id", "==", exercise_id)
-            .get()
-            .then((querySnapshot) => {
-               observer.next(querySnapshot.size);
-               observer.complete();
-            }).catch(error => {
-                observer.error(error);
-            });
-        });
-    }
-
     updateExerciseName(exercise_id, newName){
         this._DB.collection("exercises")
         .doc(exercise_id)
@@ -397,85 +328,20 @@ export class FirebaseService {
         });
     }
 
-    updateSetWithReps(set_id, rep_count, newWeight){
+    updateSet(set_id, rep_count, newWeight){
         return new Promise((resolve, reject) => {
             this._DB.collection("sets")
             .doc(set_id)
             .update({
+                rep_count: rep_count,
                 weight: newWeight
             })
             .then(() => {
-                this._DB.collection("reps")
-                .where("set_id", "==", set_id)
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach(rep => {
-                        rep.ref.update({
-                            weight: newWeight
-                        });
-                        resolve();
-                        console.log("Successfully updated!");
-                    });
-                })
-                .catch(error => {
-                    reject();
-                    console.log("Something went wrong!");
-                });
+                console.log("Set successfully updated!")
+                resolve();
             }).catch(error => {
                 reject();
                 console.log("Error updating set", error);
-            });
-        });
-    }
-
-    adjustRepCount(set_id, rep_count, args) {
-        return new Promise ((resolve, reject) => {
-            this._DB.collection("reps")
-            .where("set_id", "==", set_id)
-            .get()
-            .then(reps => {
-                if (rep_count > reps.size) {
-                    let numofRepsToCreate = rep_count - reps.size;
-                    for (let i = 0; i < numofRepsToCreate; i++){
-                        this.addRepToSet(args.user_id, args.workout_id, args.exercise_id, set_id, args.weight);
-                    }
-                    resolve();
-                } else {
-                    let numOfRepsToDestroy = reps.size - rep_count;
-                    for (let i = 0; i < numOfRepsToDestroy; i++) {
-                        reps.docs[i].ref.delete()
-                        .then(() => {
-                            console.log("Successfully delete rep");
-                        })
-                        .catch(error => {
-                            reject();
-                            console.log("Did not successfully delete rep");
-                        });  
-                    }
-                    resolve();
-                }  
-            })
-            .catch(error => {
-                console.log("Error: ", error); 
-                reject();
-            });
-        });
-    }
-
-    deleteRepsFromSet(set_id){
-        return new Promise ((resolve, reject) => {
-            this._DB.collection("reps")
-            .where("set_id", "==", set_id)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(rep => {
-                    rep.ref.delete();
-                });
-                resolve();
-            })
-            .catch(() => {
-                console.log("Did not successfully delete reps belonging to set");
-                reject();
             });
         });
     }
@@ -512,47 +378,6 @@ export class FirebaseService {
         });
     }
 
-    deleteAllDependentOnExercise(exercise_id){
-        return new Promise((resolve, reject) => {
-            this.deleteRepsFromExercise(exercise_id)
-            .then(() => {
-                this.deleteSetsFromExercise(exercise_id)
-                .then(() => {
-                    resolve();
-                })
-                .catch(error => {
-                    console.log("Error occurred: ", error);
-                })
-            });
-        });
-        
-    }
-
-    deleteRepsFromExercise(exercise_id){
-        return new Promise ((resolve, reject) => {
-            this._DB.collection("reps")
-            .where("exercise_id", "==", exercise_id)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(rep => {
-                    rep.ref.delete()
-                    .then(() => {
-                        console.log("Successfully deleted rep from exercise");
-                    })
-                    .catch(error => {
-                        reject();
-                        console.log("Error occurred: ", error);  
-                    });
-                });
-                resolve();
-            })
-            .catch(error => {
-                console.log("Error occurred: ", error);
-                reject();
-            });
-        });
-    }
-
     deleteSetsFromExercise(exercise_id){
         return new Promise ((resolve, reject) => {
             this._DB.collection("sets")
@@ -580,24 +405,18 @@ export class FirebaseService {
 
     deleteAllDependentOnWorkout(workout_id) {
         return new Promise ((resolve, reject) => {
-            this.deleteRepsFromWorkout(workout_id)
+            this.deleteSetsFromWorkout(workout_id)
             .then(() => {
-                this.deleteSetsFromWorkout(workout_id)
+                this.deleteExercisesFromWorkout(workout_id)
                 .then(() => {
-                    this.deleteExercisesFromWorkout(workout_id)
-                    .then(() => {
-                        resolve();
-                    })
-                    .catch(error => {
-                        reject();
-                        console.log("Error occurred: ", error);
-                    });
+                    resolve();
                 })
                 .catch(error => {
-                    console.log("Error occured: ", error);
                     reject();
+                    console.log("Error occurred: ", error);
                 });
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.log("Error occured: ", error);
                 reject();
             });
@@ -639,31 +458,6 @@ export class FirebaseService {
                     set.ref.delete()
                     .then(() => {
                         console.log("Successfully deleted set from workout");
-                    })
-                    .catch(error => {
-                        reject();
-                        console.log("Error occurred: ", error);
-                    });
-                });
-                resolve();
-            })
-            .catch(error => {
-                reject();
-                console.log("Error occurred: ", error);
-            });
-        });
-    }
-
-    deleteRepsFromWorkout(workout_id){
-        return new Promise ((resolve, reject) => {
-            this._DB.collection("reps")
-            .where("workout_id", "==", workout_id)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(rep => {
-                    rep.ref.delete()
-                    .then(() => {
-                        console.log("Successfully deleted rep from workout");
                     })
                     .catch(error => {
                         reject();
