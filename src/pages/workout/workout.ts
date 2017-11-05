@@ -24,19 +24,27 @@ export class WorkoutPage {
     public user: UserService,
     public loading: LoadingController,
     public toast: ToastController) {
-      this._DB.getFullWorkouts(this.user.id)
-      .subscribe(data => {
-        this.workoutList = <any[]>data;
-      });
+      this.getWorkouts();
   }
 
   ionViewWillEnter(){
   }
 
+  getWorkouts(){
+    this._DB.getFullWorkouts(this.user.id)
+    .subscribe(data => {
+      this.workoutList = <any[]>data;
+    });
+  }
+
 
   toggleSection(i) {
     this.workoutList[i].open = !this.workoutList[i].open;
-    console.log(this.workoutList[i]);
+    for (let j = 0; j < this.workoutList.length; j++){
+      if (j != i && this.workoutList[j].open) {
+        this.workoutList[j].open = !this.workoutList[j].open;
+      }
+    }
   }
  
   toggleItem(i, j) {
@@ -48,7 +56,7 @@ export class WorkoutPage {
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
-        // this.workouts = this.getWorkouts();
+        this.getWorkouts();
         this.toast.create({
           message: "Workout created!",
           position: "middle",
@@ -61,13 +69,10 @@ export class WorkoutPage {
 
 
   refresh(refresher) {
-    // this.workouts = this.getWorkouts();
+    this.getWorkouts();
     refresher.complete();
   }
 
-  getWorkouts() {
-    return this._DB.getFullWorkouts(this.user.id);
-  }
 
   goToWorkoutShowPage(workout) {
     if (!this.fabOpened) {
