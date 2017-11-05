@@ -31,10 +31,17 @@ export class WorkoutPage {
   }
 
   getWorkouts(){
-    this._DB.getFullWorkouts(this.user.id)
-    .subscribe(data => {
-      this.workoutList = <any[]>data;
+    let loader = this.loading.create({
+      content: "Fetching data..."
     });
+
+    loader.present();
+    this._DB.getFullWorkouts(this.user.id)
+    .subscribe(
+      data => this.workoutList = <any[]>data,
+      error => {console.log("Error: ", error), loader.dismiss()},
+      () => loader.dismiss()
+    );
   }
 
 

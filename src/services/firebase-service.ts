@@ -127,12 +127,17 @@ export class FirebaseService {
                     this.getFullWorkout(workout.id)
                     .then(fullWorkout => {
                         result.push(fullWorkout);
+                        if (workouts.length == result.length){
+                            observer.complete();
+                        }
                     })
                     .catch(error => {
                         console.log("Error: ", error);
                     });
                 });
                 observer.next(result);
+
+                
             })
             .catch(error => {
                 console.log("Error: ", error);
