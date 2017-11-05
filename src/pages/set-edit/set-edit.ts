@@ -24,7 +24,7 @@ export class SetEditPage {
     private _DB: FirebaseService,
     private user: UserService) {
     this.set.id = this.navParams.get("set_id");
-    this.set.reps = this.navParams.get("reps");
+    this.set.rep_count = this.navParams.get("rep_count");
     this.set.weight = this.navParams.get("weight");
     this.workout_id = this.navParams.get("workout_id");
     this.exercise_id = this.navParams.get("exercise_id");
@@ -36,38 +36,26 @@ export class SetEditPage {
 
   }
 
-  close(){
-    this.viewCtrl.dismiss();
+  close(edit?){
+    this.viewCtrl.dismiss(edit);
   }
 
   submit(){
     let repCount = this.set_form.value.repCount;
     let weight = this.set_form.value.weight;
     this.updateSet(repCount, weight)
-    .then(() => {
-      this.close();
+    .then(edited => {
+      this.close(edited);
     });
   }
 
   updateSet(repCount, weight){
     return new Promise((resolve, reject) => {
-      let args = this.createArgs(weight);
-      this._DB.adjustRepCount(this.set.id, this.set_form.value.repCount, args)
+      this._DB.updateSet(this.set.id, parseInt(this.set_form.value.repCount, 10), parseInt(weight, 10))
       .then(() => {
-        this._DB.updateSetWithReps(this.set.id, repCount, weight)
-        .then(() => {
-          resolve();
-        });
+        let edited = true;
+        resolve(edited);
       });
     });
-  }
-
-  createArgs(weight) {
-    let args = {};
-    args["user_id"] = this.user.id;
-    args["workout_id"] = this.workout_id;
-    args["exercise_id"] = this.exercise_id;
-    args["weight"] = weight;
-    return args;
   }
 }

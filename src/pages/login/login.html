@@ -17,5 +17,5 @@
       <ion-input type="password" [(ngModel)]="user.password" value="" formControlName="password" value="password"></ion-input>
     </ion-item>
   </form>
-  <button ion-button block color="secondary" [disabled]="!login_form.valid" (click)="login(user)" >Login</button>
+  <button ion-button block color="light" [disabled]="!login_form.valid" (click)="login(user)" >Login</button>
 </ion-content>

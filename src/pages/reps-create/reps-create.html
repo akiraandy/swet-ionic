@@ -33,11 +33,11 @@
     </div>
     <ion-grid>
       <ion-row>
-        <ion-col><button ion-button block [disabled]="uniform"(click)="addSet()">Add Set</button></ion-col>
+        <ion-col><button ion-button block [disabled]="uniform"(click)="addSet()" color="light">Add Set</button></ion-col>
       </ion-row>
         <ion-row>
-          <ion-col><button ion-button full round (click)="close()">Cancel</button></ion-col>
-          <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid" (click)="submit()">Submit</button></ion-col>
+          <ion-col><button ion-button full round (click)="close()" color="light">Cancel</button></ion-col>
+          <ion-col><button ion-button full round type="submit" [disabled]="!exercise_form.valid" (click)="submit()" color="light">Submit</button></ion-col>
         </ion-row>
       </ion-grid>
   </form>
