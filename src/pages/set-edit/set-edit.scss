@@ -2,4 +2,8 @@ page-set-edit {
     #edit-set{
         background: $background;
     }
+    
+    .buttons {
+        color: color($colors, secondary);
+      }
 }

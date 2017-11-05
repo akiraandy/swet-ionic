@@ -2,4 +2,7 @@ page-exercise-edit {
     #exercise-edit {
         background: $background;
     }
+    .buttons {
+        color: color($colors, secondary);
+      }
 }

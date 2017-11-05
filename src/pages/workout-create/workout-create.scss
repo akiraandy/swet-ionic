@@ -5,4 +5,8 @@ page-workout-create {
     button {
         width: 45%;
     }
+
+    .buttons {
+        color: color($colors, secondary);
+      }
 }

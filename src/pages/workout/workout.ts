@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController, FabContainer, AlertController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController, AlertController} from 'ionic-angular';
 import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 import { Observable } from 'rxjs/Observable';
@@ -27,10 +27,6 @@ export class WorkoutPage {
     public toast: ToastController,
     public alertCtrl: AlertController) {
       this.getWorkouts();
-  }
-
-
-  ionViewWillEnter(){
   }
 
   navigateToExerciseCreatePage(workout){
@@ -176,10 +172,8 @@ export class WorkoutPage {
   }
 
   toggleSection(i) {
-
     this.workoutList[i].open = !this.workoutList[i].open;
     this.assignTodaysWorkout();
-    console.log(this.workoutList[i]);
     for (let j = 0; j < this.workoutList.length; j++){
       if (j != i && this.workoutList[j].open) {
         this.workoutList[j].open = !this.workoutList[j].open;
@@ -194,7 +188,6 @@ export class WorkoutPage {
   addWorkout() {
     let modal = this.modalCtrl.create("WorkoutCreatePage", { enableBackdropDismiss: true });
     modal.onDidDismiss(workout_created => {
-      this.resetBlur();
       if (workout_created) {
         this.getWorkouts();
         this.toast.create({
@@ -207,34 +200,8 @@ export class WorkoutPage {
     modal.present();
   }
 
-
   refresh(refresher) {
     this.getWorkouts();
     refresher.complete();
-  }
-
-
-  goToWorkoutShowPage(workout) {
-    if (!this.fabOpened) {
-      this.navCtrl.push("WorkoutShowPage", {
-        id: workout.id
-      });
-    }
-  }
-
-  resetBlur() {
-    this.fabOpened = false;
-  }
-
-  addBlur() {
-    this.fabOpened = true;
-  }
-
-  fabContainerClicked(fab: FabContainer) {
-    this.fabOpened = !fab._listsActive;
-  }
-
-  closeFab(fab: FabContainer) {
-    fab.close();
   }
 }

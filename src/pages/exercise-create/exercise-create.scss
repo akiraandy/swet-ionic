@@ -2,4 +2,8 @@ page-exercise-create {
     #exercise-create{
         background: $background;
     }
+
+    .buttons {
+        color: color($colors, secondary);
+      }
 }

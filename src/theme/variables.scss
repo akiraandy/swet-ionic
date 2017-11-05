@@ -57,6 +57,9 @@ $colors: (
 }
 
 
+
+
+
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
@@ -85,6 +88,7 @@ $colors: (
 // so that the above variables are used and Ionic's
 // default are overridden.
 $background: -webkit-linear-gradient(-90deg, #FAD961, #F76B1C);
+
 @import "ionic.theme.default";
 
 

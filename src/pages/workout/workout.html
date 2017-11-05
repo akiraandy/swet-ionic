@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding id="workout" (click)="closeFab(fab1); resetBlur()">
+<ion-content padding id="workout">
   <ion-refresher (ionRefresh)="refresh($event)">
       <ion-refresher-content 
         pullingIcon="arrow-dropdown"
@@ -101,6 +101,6 @@
 
 <ion-footer>
     <ion-fab bottom right #fab1>
-        <button ion-fab (click)="addWorkout(); addBlur(); closeFab(fab1)" color="light"><ion-icon name="add" color="primary"></ion-icon></button>
+        <button ion-fab (click)="addWorkout()" color="light"><ion-icon name="add" color="primary"></ion-icon></button>
       </ion-fab>
 </ion-footer>
