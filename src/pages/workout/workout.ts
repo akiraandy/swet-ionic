@@ -4,6 +4,7 @@ import { FirebaseService } from '../../services/firebase-service';
 import { UserService } from '../../services/user-service';
 import { Observable } from 'rxjs/Observable';
 import { Workout } from '../../models/workout';
+import 'rxjs/add/operator/map';
 
 @IonicPage()
 @Component({
@@ -12,7 +13,8 @@ import { Workout } from '../../models/workout';
 })
 
 export class WorkoutPage {
-  workouts : Promise<Workout[]>;
+  workouts : Observable<Workout[]>;
+  workoutList: any[];
 
   fabOpened: boolean = false;
   constructor(public modalCtrl: ModalController,
@@ -22,11 +24,23 @@ export class WorkoutPage {
     public user: UserService,
     public loading: LoadingController,
     public toast: ToastController) {
-
+      this._DB.getFullWorkouts(this.user.id)
+      .subscribe(data => {
+        this.workoutList = <any[]>data;
+      });
   }
 
   ionViewWillEnter(){
-    this.workouts = this.getWorkouts();
+  }
+
+
+  toggleSection(i) {
+    this.workoutList[i].open = !this.workoutList[i].open;
+    console.log(this.workoutList[i]);
+  }
+ 
+  toggleItem(i, j) {
+    this.workoutList[i].exercises[j].open = !this.workoutList[i].exercises[j].open;
   }
 
   addWorkout() {
@@ -34,7 +48,7 @@ export class WorkoutPage {
     modal.onDidDismiss(workout_created => {
       this.resetBlur();
       if (workout_created) {
-        this.workouts = this.getWorkouts();
+        // this.workouts = this.getWorkouts();
         this.toast.create({
           message: "Workout created!",
           position: "middle",
@@ -45,13 +59,14 @@ export class WorkoutPage {
     modal.present();
   }
 
+
   refresh(refresher) {
-    this.workouts = this.getWorkouts();
+    // this.workouts = this.getWorkouts();
     refresher.complete();
   }
 
   getWorkouts() {
-    return this._DB.getWorkouts(this.user.id);
+    return this._DB.getFullWorkouts(this.user.id);
   }
 
   goToWorkoutShowPage(workout) {

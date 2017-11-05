@@ -5,8 +5,10 @@
         <button ion-button icon-only clear (click)="showDeletePrompt()"><ion-icon name="backspace" is-active="false"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
-  
 </ion-header>
+
+
+
 <ion-content padding id="workout-show" [class.blur]="applyBlur">
   <ion-list>
     <ion-list-header>{{ (workout | async)?.date() }} {{ (workout | async)?.fromNow()}}</ion-list-header>

@@ -118,6 +118,29 @@ export class FirebaseService {
         });
     }
 
+    getFullWorkouts(user_id) {
+        return new Observable((observer) => {
+            let result = [];
+            this.getWorkouts(user_id)
+            .then(workouts => {
+                workouts.forEach(workout => {
+                    this.getFullWorkout(workout.id)
+                    .then(fullWorkout => {
+                        result.push(fullWorkout);
+                    })
+                    .catch(error => {
+                        console.log("Error: ", error);
+                    });
+                });
+                observer.next(result);
+            })
+            .catch(error => {
+                console.log("Error: ", error);
+                observer.error(error);
+            });
+        });
+    }
+
     getFullWorkout(workout_id: string) :Promise<Workout> {
         return new Promise<Workout>((resolve, reject) => {
             this.getWorkout(workout_id)
