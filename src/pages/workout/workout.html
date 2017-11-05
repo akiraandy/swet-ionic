@@ -1,20 +1,17 @@
-<!-- <ion-content padding id="workout" (click)="closeFab(fab1); resetBlur()">
+<ion-content padding id="workout" (click)="closeFab(fab1); resetBlur()">
   <ion-refresher (ionRefresh)="refresh($event)">
-    <ion-refresher-content 
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingSpinner="crescent"
-      refreshingText="Getting workouts...">
-    </ion-refresher-content>
-  </ion-refresher> -->
+      <ion-refresher-content 
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="crescent"
+        refreshingText="Getting workouts...">
+      </ion-refresher-content>
+    </ion-refresher>
 
-  <ion-content padding>
   <ion-list class="accordion-list">
-    <!-- First Level -->
-    <ion-list-header *ngFor="let workout of workoutList; let i = index" no-lines no-padding>
-      <!-- Create exercise -->
 
-      <!-- Toggle Button -->
+    <ion-list-header *ngFor="let workout of workoutList; let i = index" no-lines no-padding>
+
       <button ion-item (click)="toggleSection(i)" detail-none [ngClass]="{'section-active': workout.open, 'section': !workout.open}">
         <ion-icon item-right name="arrow-forward" *ngIf="!workout.open"></ion-icon>
         <ion-icon item-right name="arrow-down" *ngIf="workout.open"></ion-icon>
@@ -81,13 +78,3 @@
         <button ion-fab (click)="addWorkout(); addBlur(); closeFab(fab1)" color="primary"><ion-icon name="add" color="light"></ion-icon></button>
       </ion-fab>
 </ion-footer>
-
-<!-- 
-  <div [class.blur]="fabOpened" >
-    <ion-list>
-      <ion-item *ngFor="let workout of workouts | async" (click)="goToWorkoutShowPage(workout)">{{workout.title}}</ion-item>
-    </ion-list>
-  </div>
-  <button ion-button (click)="printWorkouts()">Print Workouts</button> -->
-
-
